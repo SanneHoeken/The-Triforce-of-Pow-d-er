@@ -2,10 +2,11 @@ import matplotlib.pyplot as plt
 
 from protein import Protein
 
-protein = Protein(['H', 'H', 'P', 'H', 'H', 'H', 'P', 'H', 'P', 'H', 'H', 'H', 'P', 'H'])
+protein = Protein(['H', 'H', 'P', 'H', 'H', 'H', 'P', 'H'])
 
-x = [coordinate[0] for coordinate in protein.coordinates]
-y = [coordinate[1] for coordinate in protein.coordinates]
+x = [amino.coordinate[0] for amino in protein.aminos]
+y = [amino.coordinate[1] for amino in protein.aminos]
+
 n = protein.length
 
 plt.figure()
