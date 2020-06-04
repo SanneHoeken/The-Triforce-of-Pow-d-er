@@ -12,9 +12,11 @@ class Protein():
 
         protein = []
 
+        # open source file and read first line
         with open(source_file, 'r') as infile:
             protein_string = infile.readline()
 
+        # transform string into list of chars
         amino_list = [element for element in protein_string]
 
         # iterate over every amino

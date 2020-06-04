@@ -2,11 +2,11 @@
 class Amino():
 
     def __init__(self, position, amino_type):
-        self.position = position
+        self.id = position
         self.type = amino_type
-        self.fold = 0
-        self.coordinate = (0, 0)
-        self.occupied_fold = 0
+        self.fold = None
+        self.coordinate = None
+        self.occupied_fold = None
 
     def set_occupied_fold(self, occupied_fold):
         self.occupied_fold = occupied_fold
@@ -16,3 +16,6 @@ class Amino():
 
     def set_coordinate(self, x, y):
         self.coordinate = (x, y)
+
+    def __repr__(self):
+        return f"Amino({self.id})"
