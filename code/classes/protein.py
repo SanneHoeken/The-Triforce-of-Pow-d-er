@@ -1,15 +1,34 @@
 import random
-from amino import Amino
+from .amino import Amino
 
 class Protein():
 
-    def __init__(self, amino_list):
-        self.aminos = []
-        self.length = len(amino_list)
-        self.load_structure(amino_list)
+    def __init__(self, source_file):
+        self.aminos = self.load_protein(source_file)
+        self.fold_protein()
         self.score = self.calculate_score()
 
-    def load_structure(self, amino_list):
+    def load_protein(self, source_file):
+
+        protein = []
+
+        with open(source_file, 'r') as infile:
+            protein_string = infile.readline()
+
+        amino_list = [element for element in protein_string]
+
+        # iterate over every amino
+        for i, amino_type in enumerate(amino_list):
+
+            # initialize amino
+            amino = Amino(i, amino_type)
+
+            # add amino to protein-structure
+            protein.append(amino)
+
+        return protein
+
+    def fold_protein(self):
         
         # set first coordinate to (0,0) and occupied fold to 0
         x = 0
@@ -17,11 +36,8 @@ class Protein():
         occupied_fold = 0
         
         # iterate over every amino
-        for i, amino_type in enumerate(amino_list):
+        for amino in self.aminos:
 
-            # initialize amino
-            amino = Amino(i, amino_type)
-            
             # set amino's coordinates
             amino.set_coordinate(x, y)
 
@@ -41,9 +57,6 @@ class Protein():
                 # keep coordinate and fold if it is not occupied in protein
                 if all([amino_object.coordinate != (x_tmp, y_tmp) for amino_object in self.aminos]):
                     break
-
-            # add amino to protein-structure
-            self.aminos.append(amino)
             
             # set next coordinate values
             x = x_tmp
@@ -51,7 +64,7 @@ class Protein():
 
             # set next occupied fold to inverse fold
             occupied_fold = -fold
-    
+
 
     def get_fold(self):
         
