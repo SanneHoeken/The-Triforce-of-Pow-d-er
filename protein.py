@@ -6,9 +6,6 @@ class Protein():
     def __init__(self, amino_list):
         self.aminos = []
         self.length = len(amino_list)
-        self.aminotypes = amino_list
-        self.folds = []
-        self.coordinates = []
         self.load_structure(amino_list)
         self.score = self.calculate_score()
 
@@ -26,7 +23,6 @@ class Protein():
             amino = Amino(i, amino_type)
             
             # set amino's coordinates
-            self.coordinates.append((x, y))
             amino.set_coordinate(x, y)
 
             # set amino's occupied fold
@@ -37,14 +33,15 @@ class Protein():
                 
                 # generate and set fold
                 fold = self.get_fold()
-                self.folds.append(fold)
                 amino.set_fold = fold
                 
                 # compute next coordinate following the fold
                 x_tmp, y_tmp = self.calculate_coordinate(fold, x, y)
+                print(x_tmp, y_tmp)
 
                 # keep coordinate and fold if it is not occupied in protein
-                if (x_tmp, y_tmp) not in self.coordinates:
+                if all([amino_object.coordinate != (x_tmp, y_tmp) for amino_object in self.aminos]):
+                    print([amino_object.coordinate for amino_object in self.aminos])
                     break
 
             # add amino to protein-structure
@@ -57,6 +54,7 @@ class Protein():
             # set next occupied fold to inverse fold
             occupied_fold = -fold
     
+
     def get_fold(self):
         
         # generate random fold
