@@ -33,15 +33,13 @@ class Protein():
                 
                 # generate and set fold
                 fold = self.get_fold()
-                amino.set_fold = fold
+                amino.set_fold(fold)
                 
                 # compute next coordinate following the fold
                 x_tmp, y_tmp = self.calculate_coordinate(fold, x, y)
-                print(x_tmp, y_tmp)
 
                 # keep coordinate and fold if it is not occupied in protein
                 if all([amino_object.coordinate != (x_tmp, y_tmp) for amino_object in self.aminos]):
-                    print([amino_object.coordinate for amino_object in self.aminos])
                     break
 
             # add amino to protein-structure
@@ -86,4 +84,29 @@ class Protein():
         
         score = 0
 
+        # checks for every H-amino in protein if not-connected neighbor is H-amino
+        for amino in self.aminos:
+            
+            if amino.type == 'H':
+                x, y = amino.coordinate
+
+                # initializes not-connected directions
+                free_folds = list({-2, 2, -1, 1} - {amino.occupied_fold, amino.fold})
+                
+                # checks for every not-connected direction if H-amino is present
+                for fold in free_folds:
+                    next_coordinate = self.calculate_coordinate(fold, x, y)
+
+                    #TO CONTINUE
+                    neighbor = self.get_amino(next_coordinate)
+                    if neighbor == 'H':
+                        score -= 1
+
         return score
+
+    def get_amino(self, coordinate):
+        
+        # returns amino that is present on a certain coordinate
+
+        #TO DO
+        return 'H'
