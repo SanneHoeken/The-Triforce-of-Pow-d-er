@@ -4,12 +4,12 @@ class Amino():
     def __init__(self, position, amino_type):
         self.id = position
         self.type = amino_type
-        self.fold = None
+        self.fold = None  # in 2D-grid -2, 2, -1 or 1
         self.coordinate = None
-        self.occupied_fold = None
+        self.previous_amino = None
 
-    def set_occupied_fold(self, occupied_fold):
-        self.occupied_fold = occupied_fold
+    def set_previous_amino(self, previous_amino):
+        self.previous_amino = previous_amino
 
     def set_fold(self, fold):
         self.fold = fold
