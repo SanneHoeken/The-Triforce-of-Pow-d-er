@@ -47,6 +47,8 @@ class Protein():
             amino.set_occupied_fold(occupied_fold)
             
             # fold amino towards a free coordinate
+            # Charlotte note: during prog1 I had been told what while True wasn't really good practice.
+            # -> Why not "while not all" + the conditionline 62? (Or better, a do{} while but not sure that exists in Python)
             while True:
                 
                 # generate and set fold
@@ -124,4 +126,6 @@ class Protein():
         # returns amino that is present on a certain coordinate
 
         #TO DO
+        # Note Charlotte: mag ik het proberen te implementeren? Ik begrijp je code helemaal maar om het helemaal vast in mijn hoofd
+        # te krijgen zou ik het fijn vinden om het even proberen te modificeren en gebruiken!
         return 'H'
