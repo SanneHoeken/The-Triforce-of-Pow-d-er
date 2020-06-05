@@ -50,6 +50,10 @@ class Protein():
             
             # generate and set fold
             fold = self.get_fold(x, y)
+            if fold == 0:
+                # iets waardoor onze amino niet verdergaat met deze state
+                pass
+             
             amino.set_fold(fold)
                 
             # compute next coordinate following the fold
@@ -70,6 +74,10 @@ class Protein():
 
         # choose random fold
         # later version: optimal choice
+        if len(possible_folds) == 0:
+            print("Protein folding resulted in dead end") 
+            return 0
+                
         fold = random.choice(possible_folds)
         
         return fold
@@ -140,6 +148,7 @@ class Protein():
                         score -= 1
 
         return 0.5 * score
+
 
     def get_aminotype(self, coordinate):
         

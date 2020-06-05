@@ -6,14 +6,18 @@ if __name__ == "__main__":
     data_file = "data/proteins.txt"
     protein = protein.Protein(data_file)
 
-    print(protein.score)
+    if protein.score:
+        print(protein.score)
 
     # visualize protein
     x = [amino.coordinate[0] for amino in protein.aminos]
     y = [amino.coordinate[1] for amino in protein.aminos]
 
-    x_H = []
-    y_H = []
+    x_H = [amino.coordinate[0] for amino in protein.aminos if amino.type == 'H']
+    y_H = [amino.coordinate[1] for amino in protein.aminos if amino.type == 'H']
+
+    x_P = [amino.coordinate[0] for amino in protein.aminos if amino.type == 'P']
+    y_P = [amino.coordinate[1] for amino in protein.aminos if amino.type == 'P']
 
     plt.figure()
     plt.xlim(-10, 10)
@@ -21,6 +25,7 @@ if __name__ == "__main__":
     plt.xticks(range(-10, 10))
     plt.yticks(range(-10, 10))
     plt.grid(b=True)
-    plt.plot(x, y)
-    plt.scatter(x_H, y_H)
+    plt.plot(x, y, color='k')
+    plt.scatter(x_H, y_H, color='r', marker='o')
+    plt.scatter(x_P, y_P, color='b', marker='o')
     plt.show()

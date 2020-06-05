@@ -16,6 +16,3 @@ class Amino():
 
     def set_coordinate(self, x, y):
         self.coordinate = (x, y)
-
-    def __repr__(self):
-        return f"Amino({self.id})"
