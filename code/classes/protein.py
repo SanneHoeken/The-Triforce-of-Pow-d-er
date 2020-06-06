@@ -3,6 +3,9 @@ from .amino import Amino
 
 class Protein():
 
+    # Note: Op dit moment moeten de aminos meteen gedurende het aanmaak van de eiwit worden geladen. Dat betekent dat we geen mogelijkheid
+    # hebben om een nieuwe eiwit aan te maken en pas later aminos te laden. Ik weet niet of het uitmaakt, misschien niet, maar
+    # ik wilde het wel opmerken.
     def __init__(self, **kwargs):
         self.source_file = kwargs.get('file', None)
         self.source_string = kwargs.get('string', None)
@@ -10,9 +13,14 @@ class Protein():
         self.source_new_amino = kwargs.get('new_amino', None)
         self.aminos = []
         self.load_aminos()
-        self.fold_protein()
-        self.score = self.calculate_score()
-
+        self.score = 0
+ 
+ 
+    def get_score(self):
+        return self.score
+    
+    def get_aminos(self):
+        return self.aminos
 
     def load_aminos(self):
 
@@ -52,6 +60,7 @@ class Protein():
         return self.aminos
 
 
+
     def add_amino(self, amino_type):
         # initialize amino
         amino = Amino(len(self.aminos), amino_type)
@@ -59,40 +68,6 @@ class Protein():
         # add amino to protein-structure
         self.aminos.append(amino)
 
-
-    def fold_protein(self):
-        
-        # set first coordinate to (0,0) and occupied fold to 0
-        x = 0
-        y = 0
-        previous_amino = 0
-        
-        # iterate over every amino
-        for amino in self.aminos:
-
-            # set amino's coordinates
-            amino.set_coordinate(x, y)
-
-            # set amino's occupied fold
-            amino.set_previous_amino(previous_amino)
-            
-            # generate and set fold
-            fold = self.get_fold(x, y)
-            if fold == 0:
-                # iets waardoor onze amino niet verdergaat met deze state
-                pass
-             
-            amino.set_fold(fold)
-                
-            # compute next coordinate following the fold
-            new_x, new_y = self.calculate_coordinate(fold, x, y)
-
-            # set next coordinate values
-            x = new_x
-            y = new_y
-
-            # set previous amino to inverse fold
-            previous_amino = -fold
 
 
     def get_fold(self, x, y):
@@ -110,7 +85,8 @@ class Protein():
         
         return fold
 
-    
+
+
     def get_possible_folds(self, x, y):
         
         possible_folds = []

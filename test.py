@@ -1,13 +1,17 @@
 import matplotlib.pyplot as plt
 
-from code.classes import protein
+from code.classes import protein as prt, amino, protein_folder as prt_folder
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
-    protein = protein.Protein(file=data_file)
 
-    if protein.score:
-        print(protein.score)
+    protein = prt.Protein(file=data_file)
+    folder = prt_folder.ProteinFolder(protein)
+    folder.fold()
+    protein.calculate_score()
+    
+    if protein.get_score():
+        print(protein.get_score())
 
     # visualize protein
     x = [amino.coordinate[0] for amino in protein.aminos]
