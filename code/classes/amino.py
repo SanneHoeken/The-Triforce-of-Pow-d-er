@@ -16,3 +16,8 @@ class Amino():
 
     def set_coordinate(self, x, y):
         self.coordinate = (x, y)
+    
+    def reset_amino(self):
+        self.fold = None
+        self.coordinate = None
+        self.previous_amino = None

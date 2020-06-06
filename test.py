@@ -5,11 +5,12 @@ from code.classes import protein as prt, amino, protein_folder as prt_folder
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
 
+    
     protein = prt.Protein(file=data_file)
     folder = prt_folder.ProteinFolder(protein)
     folder.fold()
     folder.calculate_score() # Note: calculate_score() could be implemented inside fold(), but this is probably more user-friendly
-    
+
     if protein.get_score():
         print(protein.get_score())
 

@@ -2,7 +2,7 @@ import random
 from .amino import Amino
 from .protein import Protein
 
-# The goal of this class will be to take a protein and try different folding possibilities until it is satisfied witht he folding
+# The goal of this class will be to take a protein and try different folding possibilities until it is satisfied with the folding
 class ProteinFolder(): # Note: Is it necessary to make this a class?
 
     def __init__(self, protein = None):
@@ -31,36 +31,50 @@ class ProteinFolder(): # Note: Is it necessary to make this a class?
         x = 0
         y = 0
         previous_amino = 0
-        
-        # iterate over every amino
-        for amino in protein.get_aminos():
 
-            # set amino's coordinates
-            amino.set_coordinate(x, y)
+        # repeat folding until all aminos are folded
+        while fold_position < (len(protein.get_aminos()) - 2):    
 
-            # set amino's occupied fold
-            amino.set_previous_amino(previous_amino)
-            
-            # generate and set fold
-            fold = self.get_fold(protein, x, y)
-            if fold == 0:
-                # iets waardoor onze amino niet verdergaat met deze state
-                pass
-             
-            amino.set_fold(fold)
+            # iterate over every amino
+            for amino in protein.get_aminos()[fold_position:]:
+
+                # set amino's coordinates
+                amino.set_coordinate(x, y)
+
+                # set amino's occupied fold
+                amino.set_previous_amino(previous_amino)
                 
-            # compute next coordinate following the fold
-            new_x, new_y = self.calculate_coordinate(fold, x, y)
+                # generate fold
+                fold = self.get_fold(protein, x, y)
+                
+                # break if protein ran into dead end
+                if fold == 0:
+                    
+                    # reset all amino values
+                    for amino in protein.get_aminos()[:fold_position+1]:
+                        amino.reset_amino()
+                    
+                    # reset fold position
+                    fold_position = 0
+                    break  
+                
+                # set fold and move fold position 
+                amino.set_fold(fold)
+                fold_position += 1
+                    
+                # compute next coordinate following the fold
+                new_x, new_y = self.calculate_coordinate(fold, x, y)
 
-            # set next coordinate values
-            x = new_x
-            y = new_y
+                # set next coordinate values
+                x = new_x
+                y = new_y
 
-            # set previous amino to inverse fold
-            previous_amino = -fold
+                # set previous amino to inverse fold
+                previous_amino = -fold
             
         self.finished_folded_protein = protein
-        
+
+
     def get_fold(self, protein, x, y):
         
         # get possible folds
@@ -75,7 +89,6 @@ class ProteinFolder(): # Note: Is it necessary to make this a class?
         fold = random.choice(possible_folds)
         
         return fold
-
 
 
     def get_possible_folds(self, protein, x, y):    

@@ -63,7 +63,6 @@ class Protein():
         return self.aminos
 
 
-
     def add_amino(self, amino_type):
         # initialize amino
         amino = Amino(len(self.aminos), amino_type)
