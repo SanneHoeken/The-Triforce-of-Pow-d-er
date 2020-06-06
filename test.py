@@ -1,18 +1,26 @@
 import matplotlib.pyplot as plt
 
-from code.classes import protein as prt, amino, random_protein_folder as prt_folder
+from code.classes import protein as prt, amino, random_protein_folder as prt_folder, timer
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
 
-    
+    # intialize protein
     protein = prt.Protein(file=data_file)
+
+    time = timer.Timer()
+    time.start()
+
+    # fold protein and calculate score
     folder = prt_folder.RandomProteinFolder(protein)
     folder.fold()
     folder.calculate_score() # Note: calculate_score() could be implemented inside fold(), but this is probably more user-friendly
+    
+    time.stop()
 
+    # print protein
     if protein.get_score():
-        print(protein.get_score())
+        print(f"Score: {protein.get_score()}")
 
     # visualize protein
     x = [amino.coordinate[0] for amino in protein.aminos]
