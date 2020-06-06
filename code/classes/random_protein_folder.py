@@ -77,7 +77,6 @@ class RandomProteinFolder():
         possible_folds = self.get_possible_folds(protein, x, y)
 
         # choose random fold
-        # later version: optimal choice
         if len(possible_folds) == 0:
             print("Protein folding resulted in dead end") 
             return 0
@@ -99,7 +98,6 @@ class RandomProteinFolder():
                 possible_folds.append(key)
 
         return possible_folds
-
 
 
     def is_free_space(self, protein, coordinate):
