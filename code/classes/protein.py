@@ -3,33 +3,61 @@ from .amino import Amino
 
 class Protein():
 
-    def __init__(self, source_file):
-        self.aminos = self.load_protein(source_file)
+    def __init__(self, **kwargs):
+        self.source_file = kwargs.get('file', None)
+        self.source_string = kwargs.get('string', None)
+        self.source_protein = kwargs.get('protein', None)
+        self.source_new_amino = kwargs.get('new_amino', None)
+        self.aminos = []
+        self.load_aminos()
         self.fold_protein()
         self.score = self.calculate_score()
 
 
-    def load_protein(self, source_file):
+    def load_aminos(self):
 
-        protein = []
+        # Loading amino acids from existing protein
+        if self.source_protein:
 
-        # open source file and read first line
-        with open(source_file, 'r') as infile:
-            protein_string = infile.readline()
+            # No new fold, just copying another protein
+            if self.source_new_amino is None:
+                self.aminos = self.source_protein.get_aminos
+                return self.aminos
+
+            # Copying a protein + adding an amino acid
+            else:
+                self.aminos = self.source_protein.get_aminos()
+                self.add_amino(self.source_new_amino)
+                return self.aminos
+
+        # Making the protein from a string
+        if self.source_file:
+
+            # open source file and read first line
+            with open(self.source_file, 'r') as infile:
+                protein_string = infile.readline()
+
+        elif self.source_string:
+            protein_string = self.source_string
+    
+        assert protein_string is not None
 
         # transform string into list of chars
         amino_list = [element for element in protein_string]
 
         # iterate over every amino
-        for i, amino_type in enumerate(amino_list):
+        for amino_type in amino_list:
+            self.add_amino(amino_type)
+                
+        return self.aminos
 
-            # initialize amino
-            amino = Amino(i, amino_type)
 
-            # add amino to protein-structure
-            protein.append(amino)
+    def add_amino(self, amino_type):
+        # initialize amino
+        amino = Amino(len(self.aminos), amino_type)
 
-        return protein
+        # add amino to protein-structure
+        self.aminos.append(amino)
 
 
     def fold_protein(self):

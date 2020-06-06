@@ -4,7 +4,7 @@ from code.classes import protein
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
-    protein = protein.Protein(data_file)
+    protein = protein.Protein(file=data_file)
 
     if protein.score:
         print(protein.score)
