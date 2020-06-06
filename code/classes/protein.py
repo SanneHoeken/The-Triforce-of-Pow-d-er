@@ -5,7 +5,7 @@ class Protein():
 
     # Note: Op dit moment moeten de aminos meteen gedurende het aanmaak van de eiwit worden geladen. Dat betekent dat we geen mogelijkheid
     # hebben om een nieuwe eiwit aan te maken en pas later aminos te laden. Ik weet niet of het uitmaakt, misschien niet, maar
-    # ik wilde het wel opmerken.
+    # ik wilde het wel opmerken. < Hoe zou een eiwit zonder aminos eruit zien?
     def __init__(self, **kwargs):
         self.source_file = kwargs.get('file', None)
         self.source_string = kwargs.get('string', None)
