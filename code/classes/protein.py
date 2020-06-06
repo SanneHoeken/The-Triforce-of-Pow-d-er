@@ -8,6 +8,7 @@ class Protein():
         self.fold_protein()
         self.score = self.calculate_score()
 
+
     def load_protein(self, source_file):
 
         protein = []
@@ -30,12 +31,13 @@ class Protein():
 
         return protein
 
+
     def fold_protein(self):
         
         # set first coordinate to (0,0) and occupied fold to 0
         x = 0
         y = 0
-        occupied_fold = 0
+        previous_amino = 0
         
         # iterate over every amino
         for amino in self.aminos:
@@ -44,36 +46,62 @@ class Protein():
             amino.set_coordinate(x, y)
 
             # set amino's occupied fold
-            amino.set_occupied_fold(occupied_fold)
+            amino.set_previous_amino(previous_amino)
             
-            # fold amino towards a free coordinate
-            # Charlotte note: during prog1 I had been told what while True wasn't really good practice.
-            # -> Why not "while not all" + the conditionline 62? (Or better, a do{} while but not sure that exists in Python)
-            while True:
+            # generate and set fold
+            fold = self.get_fold(x, y)
+            if fold == 0:
+                # iets waardoor onze amino niet verdergaat met deze state
+                pass
+             
+            amino.set_fold(fold)
                 
-                # generate and set fold
-                fold = self.get_fold()
-                amino.set_fold(fold)
-                
-                # compute next coordinate following the fold
-                x_tmp, y_tmp = self.calculate_coordinate(fold, x, y)
+            # compute next coordinate following the fold
+            new_x, new_y = self.calculate_coordinate(fold, x, y)
 
-                # keep coordinate and fold if it is not occupied in protein
-                if all([amino_object.coordinate != (x_tmp, y_tmp) for amino_object in self.aminos]):
-                    break
-            
             # set next coordinate values
-            x = x_tmp
-            y = y_tmp
+            x = new_x
+            y = new_y
 
-            # set next occupied fold to inverse fold
-            occupied_fold = -fold
+            # set previous amino to inverse fold
+            previous_amino = -fold
 
 
-    def get_fold(self):
+    def get_fold(self, x, y):
         
-        # generate random fold
-        return random.choice([-2, -1, 1, 2])
+        # get possible folds
+        possible_folds = self.get_possible_folds(x, y)
+
+        # choose random fold
+        # later version: optimal choice
+        if len(possible_folds) == 0:
+            print("Protein folding resulted in dead end") 
+            return 0
+                
+        fold = random.choice(possible_folds)
+        
+        return fold
+
+    
+    def get_possible_folds(self, x, y):
+        
+        possible_folds = []
+        
+        # dict with all neighbouring coordinates 
+        coordinates = {1: (x+1, y), -1: (x-1, y), 2:(x, y+1), -2: (x, y-1)} 
+
+        # add possible folds to list
+        for key, value in coordinates.items(): 
+            if self.is_not_occupied(value):
+                possible_folds.append(key)
+
+        return possible_folds
+
+
+    def is_not_occupied(self, coordinate):
+    
+        # return True if coordinate is not occupied, else False
+        return all([amino_object.coordinate != coordinate for amino_object in self.aminos])
 
 
     def calculate_coordinate(self, fold, x, y):
@@ -108,24 +136,25 @@ class Protein():
                 x, y = amino.coordinate
 
                 # initializes not-connected directions
-                free_folds = list({-2, 2, -1, 1} - {amino.occupied_fold, amino.fold})
+                free_folds = list({-2, 2, -1, 1} - {amino.previous_amino, amino.fold})
                 
                 # checks for every not-connected direction if H-amino is present
                 for fold in free_folds:
                     next_coordinate = self.calculate_coordinate(fold, x, y)
 
-                    #TO CONTINUE
-                    neighbor = self.get_amino(next_coordinate)
+                    # checks for hydrophobe neighbor
+                    neighbor = self.get_aminotype(next_coordinate)
                     if neighbor == 'H':
                         score -= 1
 
-        return score
+        return 0.5 * score
 
-    def get_amino(self, coordinate):
+
+    def get_aminotype(self, coordinate):
         
         # returns amino that is present on a certain coordinate
-
-        #TO DO
-        # Note Charlotte: mag ik het proberen te implementeren? Ik begrijp je code helemaal maar om het helemaal vast in mijn hoofd
-        # te krijgen zou ik het fijn vinden om het even proberen te modificeren en gebruiken!
-        return 'H'
+        for amino in self.aminos:
+            if amino.coordinate == coordinate:
+                return amino.type
+                
+        return None
