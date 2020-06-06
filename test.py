@@ -8,7 +8,7 @@ if __name__ == "__main__":
     protein = prt.Protein(file=data_file)
     folder = prt_folder.ProteinFolder(protein)
     folder.fold()
-    protein.calculate_score()
+    folder.calculate_score() # Note: calculate_score() could be implemented inside fold(), but this is probably more user-friendly
     
     if protein.get_score():
         print(protein.get_score())
