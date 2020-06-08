@@ -1,6 +1,5 @@
-import matplotlib.pyplot as plt
 import csv
-
+from code.visualisations import visualize
 from code.classes import protein as prt, amino, timer
 from code.classes.algorithms import random_protein_folder as prt_folder
 
@@ -32,27 +31,4 @@ if __name__ == "__main__":
     if protein.get_score():
         print(f"Score: {protein.get_score()}")
 
-    # visualize protein
-    x = [amino.coordinate[0] for amino in protein.aminos]
-    y = [amino.coordinate[1] for amino in protein.aminos]
-
-    x_H = [amino.coordinate[0] for amino in protein.aminos if amino.type == 'H']
-    y_H = [amino.coordinate[1] for amino in protein.aminos if amino.type == 'H']
-
-    x_P = [amino.coordinate[0] for amino in protein.aminos if amino.type == 'P']
-    y_P = [amino.coordinate[1] for amino in protein.aminos if amino.type == 'P']
-
-    x_C = [amino.coordinate[0] for amino in protein.aminos if amino.type == 'C']
-    y_C = [amino.coordinate[1] for amino in protein.aminos if amino.type == 'C']
-
-    plt.figure()
-    plt.xlim(-10, 10)
-    plt.ylim(-10, 10)
-    plt.xticks(range(-10, 10))
-    plt.yticks(range(-10, 10))
-    plt.grid(b=True)
-    plt.plot(x, y, color='k')
-    plt.scatter(x_H, y_H, color='r', marker='o')
-    plt.scatter(x_P, y_P, color='b', marker='o')
-    plt.scatter(x_C, y_C, color='g', marker='o')
-    plt.show()
+    visualize.visualize_protein(protein)
