@@ -136,10 +136,10 @@ class RandomProteinFolder():
 
         assert protein is not None
 
-        # checks for every H-amino in protein if not-connected neighbor is H-amino
+        # checks for every H- or C- amino in protein if not-connected neighbor is H-amino
         for amino in protein.get_aminos():
             
-            if amino.type == 'H':
+            if amino.type == 'H' or amino.type == 'C':
                 x, y = amino.coordinate
 
                 # initializes not-connected directions
@@ -149,9 +149,16 @@ class RandomProteinFolder():
                 for fold in free_folds:
                     next_coordinate = self.calculate_coordinate(fold, x, y)
 
-                    # checks for hydrophobe neighbor
+                    # checks for hydrophobe/cysteine neighbor and changes score
                     neighbor = protein.get_aminotype(next_coordinate)
-                    if neighbor == 'H':
+                    if amino.type == 'H' and neighbor == 'H':
                         score -= 1
+                    if amino.type == 'H' and neighbor == 'C':
+                        score -= 1
+                    if amino.type == 'C' and neighbor == 'H':
+                        score -= 1
+                    if amino.type == 'C' and neighbor == 'C':
+                        score -= 5            
+                    
 
-        protein.set_score(0.5 * score)
+        protein.set_score(int(0.5 * score))
