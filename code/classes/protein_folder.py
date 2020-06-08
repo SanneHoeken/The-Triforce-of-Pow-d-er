@@ -20,61 +20,6 @@ class ProteinFolder():
         # This method does nothing, please override it in children classes!
         pass
 
-    def get_fold(self, protein, x, y):
-        # get possible folds
-        possible_folds = self.get_possible_folds(protein, x, y)
-
-        # choose random fold
-        if len(possible_folds) == 0:
-            print("Protein folding resulted in dead end") 
-            return 0
-                
-        fold = random.choice(possible_folds)
-        
-        return fold
-
-
-    def get_possible_folds(self, protein, x, y):    
-        possible_folds = []
-        
-        # dict with all neighbouring coordinates 
-        coordinates = {1: (x+1, y), -1: (x-1, y), 2:(x, y+1), -2: (x, y-1)} 
-
-        # add possible folds to list
-        for key, value in coordinates.items(): 
-            if self.is_free_space(protein, value):
-                possible_folds.append(key)
-
-        return possible_folds
-
-
-    def is_free_space(self, protein, coordinate):
-    
-        # return True if coordinate is not occupied, else False
-        return all([amino_object.coordinate != coordinate for amino_object in protein.get_aminos()])
-
-
-    def calculate_coordinate(self, fold, x, y):
-     
-        # compute x-value following the fold
-        if fold == 1 or fold == -1:
-            x_tmp = x + fold
-
-        # keep current x-value if no move along x-axis 
-        else:
-            x_tmp = x
-
-        # compute y-value following the fold    
-        if fold == 2 or fold == -2:
-            y_tmp = y + 0.5 * fold
-        
-        # keep current y-value if no move along y-axis
-        else:
-            y_tmp = y
-        
-        return int(x_tmp), int(y_tmp)
-
-
     def calculate_score(self, protein = None):
         
         score = 0
