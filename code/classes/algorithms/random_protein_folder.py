@@ -1,17 +1,26 @@
 import random
 from code.classes.amino import Amino
 from code.classes.protein import Protein
-from code.classes.protein_folder import ProteinFolder
+from code.algorithms.calculate_score import calculate_score
+from code.algorithms.calculate_coordinate import calculate_coordinate
 
 # The goal of this class will be to take a protein and try different random folding possibilities until it is satisfied with the folding
-class RandomProteinFolder(ProteinFolder):
+class RandomProteinFolder():
+
+    def __init__(self, protein = None):
+        self.origin_protein = protein
+        self.finished_folded_protein = None
+    
+
+    def set_origin_protein(self, protein):
+        self.origin_protein = protein
+    
 
     def try_random(self, protein_to_fold=None, iterations=1):
-        
+
         """
         TO CONTINUE
-        """
-        
+        """ 
         best_score = 1
         protein = protein_to_fold
 
@@ -22,17 +31,19 @@ class RandomProteinFolder(ProteinFolder):
 
         # fold protein iterations times 
         for i in range(iterations):
-            self.fold(protein)
-            self.calculate_score()
-            score = protein.get_score()
+            tmp_protein = Protein(protein=protein)
+            self.fold(tmp_protein)
+            print(f"folded {i+1}")
+            score = calculate_score(tmp_protein)
 
             # keep protein with lowest score
             if score < best_score:
                 best_score = score
-                best_protein = Protein(protein=self.finished_folded_protein)
+                best_protein = Protein(protein=tmp_protein)
                 iteration = i
         
         print(iteration)
+        best_protein.set_score(best_score)
         self.finished_folded_protein = best_protein
 
 
@@ -51,8 +62,8 @@ class RandomProteinFolder(ProteinFolder):
         previous_amino = 0
 
         # repeat folding until all aminos are folded
-        while fold_position < (len(protein.get_aminos()) - 2):    
-
+        while fold_position < (len(protein.get_aminos()) - 2):
+            
             # iterate over every amino
             for amino in protein.get_aminos()[fold_position:]:
 
@@ -81,7 +92,7 @@ class RandomProteinFolder(ProteinFolder):
                 fold_position += 1
                     
                 # compute next coordinate following the fold
-                new_x, new_y = self.calculate_coordinate(fold, x, y)
+                new_x, new_y = calculate_coordinate(fold, x, y)
 
                 # set next coordinate values
                 x = new_x
@@ -89,7 +100,7 @@ class RandomProteinFolder(ProteinFolder):
 
                 # set previous amino to inverse fold
                 previous_amino = -fold
-            
+    
         self.finished_folded_protein = protein
 
 
@@ -125,4 +136,10 @@ class RandomProteinFolder(ProteinFolder):
         # return True if coordinate is not occupied, else False
         return all([amino_object.coordinate != coordinate for amino_object in protein.get_aminos()])
 
+    def set_score(self, protein=None):
 
+        if protein == None:
+            protein = self.finished_folded_protein
+
+        score = calculate_score(protein)
+        protein.set_score(score)

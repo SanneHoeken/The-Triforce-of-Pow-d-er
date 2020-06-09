@@ -2,6 +2,9 @@ import queue
 import copy
 from code.classes.amino import Amino
 from code.classes.protein import Protein
+from code.classes.algorithms.random_protein_folder import RandomProteinFolder
+from code.algorithms.calculate_coordinate import calculate_coordinate
+from code.visualisations import visualize
 
 class Experiment():
     """
@@ -50,7 +53,7 @@ class Experiment():
                 amino.set_fold(fold)
                     
                 # compute next coordinate following the fold
-                new_x, new_y = self.calculate_coordinate(fold, x, y)
+                new_x, new_y = calculate_coordinate(fold, x, y)
 
                 # set next coordinate values
                 x = new_x
@@ -60,27 +63,6 @@ class Experiment():
                 previous_amino = -fold
         
         return folded_protein
-
-    
-    def calculate_coordinate(self, fold, x, y):
-     
-        # compute x-value following the fold
-        if fold == 1 or fold == -1:
-            x_tmp = x + fold
-
-        # keep current x-value if no move along x-axis 
-        else:
-            x_tmp = x
-
-        # compute y-value following the fold    
-        if fold == 2 or fold == -2:
-            y_tmp = y + 0.5 * fold
-        
-        # keep current y-value if no move along y-axis
-        else:
-            y_tmp = y
-        
-        return int(x_tmp), int(y_tmp)
 
     
     def breadth_first(self, protein):
@@ -97,7 +79,19 @@ class Experiment():
                     child.append(i)
                     q.put(child)
 
-        return q
+
+    def depth_first(self, protein):
+        # implementation of depth first
+        depth = len(protein.get_aminos()) - 1
+        stack = [[]]
+        
+        while len(stack) > 0:
+            state = stack.pop()
+            if len(state) < depth:
+                for i in [-1, 1, -2, 2]:
+                    child = copy.deepcopy(state)
+                    child.append(i)
+                    stack.append(child)
 
 
 # TEST CODE
@@ -106,9 +100,7 @@ from code.visualisations import visualize
 if __name__ == "__main__":
     string = "HHPHPH"
 
-    # intialize protein
     protein = Protein(string=string)
-
     folds = [2, 1, 2, 1, -2]
     
     # get symmetric configurations
@@ -118,4 +110,3 @@ if __name__ == "__main__":
     for config in symmetric_configs:
         folded = Experiment().fold_protein(protein, config)
         visualize.visualize_protein(folded)
-   

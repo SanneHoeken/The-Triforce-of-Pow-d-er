@@ -12,10 +12,10 @@ if __name__ == "__main__":
     time = timer.Timer()
     time.start()
 
-    # fold protein and calculate score
+    # fold protein with algorithm
     folder = prt_folder.RandomProteinFolder(protein)
     folder.fold()
-    folder.calculate_score() # Note: calculate_score() could be implemented inside fold(), but this is probably more user-friendly
+    folder.set_score()
     
     time.stop()
 
