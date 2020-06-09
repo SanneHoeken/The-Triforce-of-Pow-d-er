@@ -31,4 +31,5 @@ if __name__ == "__main__":
     if protein.get_score():
         print(f"Score: {protein.get_score()}")
 
+    # plot protein
     visualize.visualize_protein(protein)

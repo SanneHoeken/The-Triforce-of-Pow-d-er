@@ -6,7 +6,37 @@ from code.classes.protein_folder import ProteinFolder
 # The goal of this class will be to take a protein and try different random folding possibilities until it is satisfied with the folding
 class RandomProteinFolder(ProteinFolder):
 
-    def fold(self, protein_to_fold = None, fold_position = 0):
+    def try_random(self, protein_to_fold=None, iterations=1):
+        
+        """
+        TO CONTINUE
+        """
+        
+        best_score = 1
+        protein = protein_to_fold
+
+        # If no argument is passed: uses origin protein
+        if protein == None:
+            assert self.origin_protein
+            protein = self.origin_protein
+
+        # fold protein iterations times 
+        for i in range(iterations):
+            self.fold(protein)
+            self.calculate_score()
+            score = protein.get_score()
+
+            # keep protein with lowest score
+            if score < best_score:
+                best_score = score
+                best_protein = Protein(protein=self.finished_folded_protein)
+                iteration = i
+        
+        print(iteration)
+        self.finished_folded_protein = best_protein
+
+
+    def fold(self, protein_to_fold=None, fold_position = 0):
 
         protein = protein_to_fold
 
@@ -68,8 +98,7 @@ class RandomProteinFolder(ProteinFolder):
         possible_folds = self.get_possible_folds(protein, x, y)
 
         # choose random fold
-        if len(possible_folds) == 0:
-            print("Protein folding resulted in dead end") 
+        if len(possible_folds) == 0: 
             return 0
                 
         fold = random.choice(possible_folds)
@@ -95,26 +124,5 @@ class RandomProteinFolder(ProteinFolder):
     
         # return True if coordinate is not occupied, else False
         return all([amino_object.coordinate != coordinate for amino_object in protein.get_aminos()])
-
-
-    def calculate_coordinate(self, fold, x, y):
-     
-        # compute x-value following the fold
-        if fold == 1 or fold == -1:
-            x_tmp = x + fold
-
-        # keep current x-value if no move along x-axis 
-        else:
-            x_tmp = x
-
-        # compute y-value following the fold    
-        if fold == 2 or fold == -2:
-            y_tmp = y + 0.5 * fold
-        
-        # keep current y-value if no move along y-axis
-        else:
-            y_tmp = y
-        
-        return int(x_tmp), int(y_tmp)
 
 
