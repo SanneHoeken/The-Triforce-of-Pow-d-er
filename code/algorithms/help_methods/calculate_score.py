@@ -1,4 +1,4 @@
-from code.algorithms.calculate_coordinate import calculate_coordinate
+from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 
 def calculate_score(protein):
         

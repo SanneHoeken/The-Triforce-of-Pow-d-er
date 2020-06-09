@@ -1,7 +1,7 @@
 import csv
 from code.visualisations import visualize
 from code.classes import protein as prt, amino, timer
-from code.classes.algorithms import random_protein_folder as prt_folder
+from code.algorithms import random_protein_folder as prt_folder
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"

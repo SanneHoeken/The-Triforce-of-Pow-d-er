@@ -2,8 +2,8 @@ import queue
 import copy
 from code.classes.amino import Amino
 from code.classes.protein import Protein
-from code.classes.algorithms.random_protein_folder import RandomProteinFolder
-from code.algorithms.calculate_coordinate import calculate_coordinate
+from code.algorithms.random_protein_folder import RandomProteinFolder
+from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 from code.visualisations import visualize
 
 class Experiment():

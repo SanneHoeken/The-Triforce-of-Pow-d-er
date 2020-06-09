@@ -1,8 +1,8 @@
 import random
 from code.classes.amino import Amino
 from code.classes.protein import Protein
-from code.algorithms.calculate_score import calculate_score
-from code.algorithms.calculate_coordinate import calculate_coordinate
+from code.algorithms.help_methods.calculate_score import calculate_score
+from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 
 # The goal of this class will be to take a protein and try different random folding possibilities until it is satisfied with the folding
 class RandomProteinFolder():
