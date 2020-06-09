@@ -1,22 +1,36 @@
 from .protein import Protein
+from .amino import Amino
 
+# Note: I haven't tried using this class yet!
 class ProteinTree():
 
-    def __init__(self, origin):
-        self.protein = origin
-        self.next_possibilities = []
+    def __init__(self, origin, depth = 0):
+        self.amino = origin
+        self.next_amino = []
+        self.depth = depth
 
-    def add_possibility(self, protein_tree):
+    def add_amino(self, amino):
         # Checks that the argument is of the correct class, so as not to add a wrong object to the list of possibilities
-        assert isinstance(protein_tree, ProteinTree)
+        if isinstance(amino, ProteinTree):
+            self.next_amino.append(amino)
 
-        self.next_possibilities.append(protein_tree)
+        if isinstance(amino, Amino):
+            amino_tree = ProteinTree(amino, self.depth + 1)
+            self.next_amino.append(amino_tree)
+
 
     def is_leaf(self, protein_tree):
 
         # Checks that the argument is of the correct class
         assert isinstance(protein_tree, ProteinTree)
 
-    
+        return (len(self.next_amino) == 0)
 
-        return (len(protein_tree.next_possibilities) == 0)
+
+    def to_string(self):
+        tree_repr = self.amino
+        
+        for amino in self.next_amino:
+            tree_repr = tree_repr + "\n" + (self.depth * "\t") + "|_" + self.to_string(amino)
+
+        return tree_repr
