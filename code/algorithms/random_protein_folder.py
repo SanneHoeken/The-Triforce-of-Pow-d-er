@@ -1,9 +1,6 @@
 import random
 import copy
-from code.classes.amino import Amino
-from code.classes.protein import Protein
-from code.algorithms.help_methods.calculate_score import calculate_score
-from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
+from code import Amino, Protein, calculate_coordinate, calculate_score
 
 
 def fold(protein, iterations=1):
@@ -12,6 +9,8 @@ def fold(protein, iterations=1):
 
     # fold protein iterations times 
     for i in range(iterations):
+        
+        # make copy of protein, fold the copy, calculate score
         protein_copy = copy.deepcopy(protein)
         fold_candidate(protein_copy)
         score = calculate_score(protein_copy)
@@ -22,11 +21,12 @@ def fold(protein, iterations=1):
             best_protein = protein_copy
             iteration = i
     
-    print(f'iteration: {iteration}')
+    print(f'Best result at iteration: {iteration} (out of {iterations})')
     protein = best_protein
     protein.set_score(best_score)
     
     return protein
+    
 
 def fold_candidate(protein_to_fold, fold_position = 0):
 
