@@ -31,6 +31,6 @@ class ProteinTree():
         tree_repr = self.amino
         
         for amino in self.next_amino:
-            tree_repr = tree_repr + "\n" + (self.depth * "\t") + "|_" + self.to_string(amino)
+            tree_repr = tree_repr + "\n" + (self.depth * "\t") + "|_" + amino.to_string()
 
         return tree_repr
