@@ -1,7 +1,7 @@
 import csv
 from code.visualisations import visualize
 from code.classes import protein as prt, amino, timer
-from code.algorithms import random_protein_folder as prt_folder
+from code.algorithms import random_protein_folder as rpf
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
@@ -12,10 +12,8 @@ if __name__ == "__main__":
     time = timer.Timer()
     time.start()
 
-    # fold protein with algorithm
-    folder = prt_folder.RandomProteinFolder(protein)
-    folder.fold()
-    folder.set_score()
+    # fold protein and set score with algorithm
+    protein = rpf.fold(protein, iterations=1000)
     
     time.stop()
 
