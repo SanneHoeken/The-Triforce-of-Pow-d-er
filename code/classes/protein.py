@@ -29,7 +29,7 @@ class Protein():
 
             # No new fold, just copying another protein
             if self.source_new_amino is None:
-                self.aminos = self.source_protein.get_aminos
+                self.aminos = self.source_protein.get_aminos()
                 return self.aminos
 
             # Copying a protein + adding an amino acid

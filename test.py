@@ -1,23 +1,22 @@
 import csv
-from code.visualisations import visualize
-from code.classes import protein as prt, amino, timer
-from code.algorithms import random_protein_folder as prt_folder
+from code import Protein, Amino, Timer, visualize
+from code.algorithms import random_protein_folder as rpf
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
 
     # intialize protein
-    protein = prt.Protein(file=data_file)
+    protein = Protein(file=data_file)
 
-    time = timer.Timer()
+    time = Timer()
     time.start()
 
-    # fold protein with algorithm
-    folder = prt_folder.RandomProteinFolder(protein)
-    folder.fold()
-    folder.set_score()
+    # fold protein and set score with algorithm
+    protein = rpf.fold(protein, iterations=100)
     
     time.stop()
+
+    print(f"Time: {time.get_time()} seconds")
 
     # write protein output to csv-file
     with open('data/output.csv', 'w') as csvfile:
