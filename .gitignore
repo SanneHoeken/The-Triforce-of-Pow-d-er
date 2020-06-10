@@ -1,3 +1,9 @@
 **/*.pyc
 **/*.DS_Store
 sanne_test.py
+__pycache__/*
+
+.vscode/
+
+output.csv
+protein.txt
