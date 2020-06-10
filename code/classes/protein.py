@@ -10,17 +10,9 @@ class Protein():
         self.source_new_amino = kwargs.get('new_amino', None)
         self.aminos = []
         self.load_aminos()
+        self.set_first_amino()
         self.score = 0
  
- 
-    def get_score(self):
-        return self.score
-
-    def set_score(self, score):
-        self.score = score
-    
-    def get_aminos(self):
-        return self.aminos
 
     def load_aminos(self):
 
@@ -60,6 +52,28 @@ class Protein():
         return self.aminos
 
 
+    def set_first_amino(self):
+        
+        # set coordinate and previous amino of first amino to zero
+        if self.aminos[0] is not None:
+            self.aminos[0].set_coordinate(0, 0)
+            self.aminos[0].set_previous_amino(0)
+
+        return self.aminos
+
+
+    def get_score(self):
+        return self.score
+
+
+    def set_score(self, score):
+        self.score = score
+    
+
+    def get_aminos(self):
+        return self.aminos
+
+
     def add_amino(self, amino_type):
         # initialize amino
         amino = Amino(len(self.aminos), amino_type)
@@ -68,11 +82,11 @@ class Protein():
         self.aminos.append(amino)
 
 
-    def get_aminotype(self, coordinate):
+    def get_amino(self, coordinate):
         
         # returns amino that is present on a certain coordinate
         for amino in self.aminos:
             if amino.coordinate == coordinate:
-                return amino.type
+                return amino
                 
         return None

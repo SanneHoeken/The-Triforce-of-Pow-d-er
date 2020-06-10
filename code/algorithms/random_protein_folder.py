@@ -109,4 +109,3 @@ def is_free_space(protein, coordinate):
 
     # return True if coordinate is not occupied, else False
     return all([amino_object.coordinate != coordinate for amino_object in protein.get_aminos()])
-    
