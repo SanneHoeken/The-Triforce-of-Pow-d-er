@@ -22,7 +22,9 @@ def calculate_score(protein):
                     # checks for hydrophobe/cysteine neighbor and changes score
                     neighbor = protein.get_amino(next_coordinate)
                     if neighbor is not None:
-                        if amino.type == 'H' and neighbor.type == 'H':
+                        if neighbor.type == 'P':
+                            score -= 0
+                        elif amino.type == 'H' and neighbor.type == 'H':
                             score -= 1
                         elif amino.type == 'H' and neighbor.type == 'C':
                             score -= 1
