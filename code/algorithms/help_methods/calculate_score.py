@@ -24,11 +24,11 @@ def calculate_score(protein):
                     if neighbor is not None:
                         if amino.type == 'H' and neighbor.type == 'H':
                             score -= 1
-                        if amino.type == 'H' and neighbor.type == 'C':
+                        elif amino.type == 'H' and neighbor.type == 'C':
                             score -= 1
-                        if amino.type == 'C' and neighbor.type == 'H':
+                        elif amino.type == 'C' and neighbor.type == 'H':
                             score -= 1
-                        if amino.type == 'C' and neighbor.type == 'C':
+                        elif amino.type == 'C' and neighbor.type == 'C':
                             score -= 5            
                 
     return int(0.5 * score)

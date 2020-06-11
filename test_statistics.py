@@ -1,27 +1,37 @@
 from code import Protein, Amino, Timer
-from code.algorithms import random_protein_folder as rpf
+from code import BestGreedy
 import matplotlib.pyplot as plt
+import csv
 
 if __name__ == "__main__":
     string = 'PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP'
 
-    iterations_list = list(range(1, 100000, 1000))
+    iterations_list = list(range(1, 20000, 100))
     scores = []
 
     for iterations in iterations_list:
+        
         # intialize protein
         protein = Protein(string=string)
 
         # fold protein and set score with algorithm
-        protein = rpf.fold(protein, iterations=iterations)
+        folder = BestGreedy(protein, iterations=iterations)
+        folder.run()
 
         # add score of protein to list
-        scores.append(protein.get_score())
+        score = folder.protein.get_score()
+        print(iterations, score)
+        scores.append(score)
 
+    # save stats
+    with open('data/greedy_stats.csv', 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(zip(iterations_list, scores))
+    
     # plot scores against number of iterations
     plt.figure()
     plt.plot(iterations_list, scores)
-    plt.title('Random algorithm (protein length: 36)')
+    plt.title('Greedy algorithm (protein length: 36)')
     plt.xlabel('iterations')
     plt.ylabel('score')
     plt.show()   
