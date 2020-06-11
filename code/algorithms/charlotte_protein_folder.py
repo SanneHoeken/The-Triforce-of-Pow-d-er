@@ -85,6 +85,7 @@ class CharlotteProteinFolder():
                     # !! To do: what if after pruning, the best node ends up leading to an impossible protein?
                     # -> Keep track of "best nodes"? Go back in tree?
                     if new_node.score <= best_node.score and new_node.depth >= best_node.depth:
+                        print(f"Changing best node, new best node is at depth {best_node.depth}")
                         best_node = new_node
 
                 # Updates queue and archive
