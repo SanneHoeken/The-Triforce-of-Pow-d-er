@@ -20,8 +20,7 @@ class BestOfRandom():
             # store protein values if score is lower
             if score < self.best_score:
                 self.best_score = score
-                self.best_protein = [(amino.fold, amino.coordinate, amino.previous_amino
-                ) for amino in random_folder.protein.get_aminos()]
+                self.best_protein = [(amino.fold, amino.coordinate) for amino in random_folder.protein.get_aminos()]
 
             # reset protein
             for amino in self.protein.get_aminos()[1:]:
@@ -31,7 +30,7 @@ class BestOfRandom():
         for i, values in enumerate(self.best_protein):
             self.protein.get_aminos()[i].set_fold(values[0])
             self.protein.get_aminos()[i].set_coordinate(values[1][0], values[1][1])
-            self.protein.get_aminos()[i].set_previous_amino(values[2])
+            self.protein.get_aminos()[i].set_previous_amino(-values[0] if values[0] is not None else None)
         
         self.protein.set_score(self.best_score)
 
@@ -81,8 +80,7 @@ class RandomFolder():
             return 1
 
         # else fold amino in protein according to the generated values
-        amino_folder = FoldAmino(self.protein, self.folding, new_values)
-        amino_folder.fold_amino_in_protein()
+        self.set_values(new_values, self.folding)
 
         # update fold position
         self.folding += 1
@@ -126,26 +124,14 @@ class RandomFolder():
         return coordinate not in self.coordinates
 
 
-class FoldAmino():
-
-    def __init__(self, protein, position, values):
-        self.protein = protein
-        self.fold, self.coordinate = values
-        self.position = position
-        self.score = 1
-    
-    def fold_amino_in_protein(self):
-
-        # get amino to fold and its next neighbor
-        current_amino = self.protein.aminos[self.position]
-        next_amino = self.protein.aminos[self.position + 1]
+    def set_values(self, values, id):
 
         # set fold of current amino
-        current_amino.set_fold(self.fold)
+        self.protein.aminos[id].set_fold(values[0])
 
-        # set coordinate and previous amino of next amino
-        next_amino.set_coordinate(self.coordinate[0], self.coordinate[1])
-        next_amino.set_previous_amino(-self.fold)
-
-        # set score of new protein configuration
-        self.score = calculate_score(self.protein)
+        # set coordinate en previous amino of next amino
+        self.protein.aminos[id + 1].set_coordinate(values[1][0], values[1][1])
+        self.protein.aminos[id + 1].set_previous_amino(-values[0])
+        
+        # return score of new configuration
+        return calculate_score(self.protein)
