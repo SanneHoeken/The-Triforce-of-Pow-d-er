@@ -1,6 +1,5 @@
 import random
-import copy
-from code import Amino, Protein, RandomFolder, FoldAmino, calculate_score
+from code import Amino, Protein, RandomFolder, calculate_score
 
 class BestGreedy():
 
@@ -14,20 +13,25 @@ class BestGreedy():
 
         # fold protein iterations times 
         for i in range(self.iterations):
-            
-            # make copy of protein, fold the copy, calculate score
-            protein_copy = copy.deepcopy(self.protein)
-            greedy_folder = Greedy(protein_copy)
+            greedy_folder = Greedy(self.protein)
             greedy_folder.fold_protein()
             score = greedy_folder.protein.get_score()
 
-            # keep protein with lowest score
+            # store protein values if score is lower
             if score < self.best_score:
                 self.best_score = score
-                self.best_protein = greedy_folder.protein
+                self.best_protein = [(amino.fold, amino.coordinate) for amino in greedy_folder.protein.get_aminos()]
+
+            # reset protein
+            for amino in self.protein.get_aminos()[1:]:
+                amino.reset_amino()
+
+        # set values of input protein to best values
+        for i, values in enumerate(self.best_protein):
+            self.protein.get_aminos()[i].set_fold(values[0])
+            self.protein.get_aminos()[i].set_coordinate(values[1][0], values[1][1])
+            self.protein.get_aminos()[i].set_previous_amino(-values[0] if values[0] is not None else None)
         
-        # set input protein to best configuration
-        self.protein = self.best_protein
         self.protein.set_score(self.best_score)    
 
 
@@ -46,18 +50,28 @@ class Greedy(RandomFolder):
 
         # get best of possible values
         for values in possible_values:
-
+    
             # fold amino according to fold values
-            amino_folder = FoldAmino(self.protein, self.folding, values)
-            amino_folder.fold_amino_in_protein()
-            
+            score = self.set_values(values, self.folding)
+
             # store values if score is better/best
-            score = amino_folder.score
             if score < best_score:
                 best_score = score
                 best_values = [values]
             elif score == best_score:
                 best_values.append(values)
+
+            # undo amino folding
+            self.reset_values(self.folding)       
         
         # return one of best values
         return random.choice(best_values)
+
+
+    def reset_values(self, id):
+
+        # reset fold of current amino
+        self.protein.aminos[id].set_fold(None)
+
+        # reset coordinate and previous amino of next amino
+        self.protein.aminos[id + 1].reset_amino()

@@ -1,6 +1,7 @@
 import csv
+import profile
 from code import Protein, Amino, Timer, visualize
-from code.algorithms import random_protein_folder as rpf
+from code.algorithms import faster_random as rpf
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
