@@ -1,0 +1,9 @@
+Hillclimber, iterations=10000, mutations_per_iteration=3
+15,False,-6,1.562
+21,False,-8,2.0578
+37,False,-11,3.8427
+51,False,-15,6.808
+37,True,-18,5.0218
+37,True,-33,5.6551
+51,True,-28,8.2037
+50,True,-25,8.0797
