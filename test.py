@@ -12,7 +12,7 @@ if __name__ == "__main__":
     time.start()
 
     # fold protein and set score with algorithm
-    protein = rpf.fold(protein, iterations=100)
+    protein = rpf.fold(protein, iterations=5000)
     
     time.stop()
 
