@@ -90,3 +90,11 @@ class Protein():
                 return amino
                 
         return None
+
+
+    def to_string(self):
+        repr = ""
+        for amino in self.aminos:
+            repr += f" [{amino.fold}] {amino.type}"
+
+        return repr

@@ -1,4 +1,6 @@
 import csv
+import profile
+
 from code.visualisations import visualize
 from code.classes import protein as prt, amino, timer
 from code.algorithms import charlotte_protein_folder as prt_folder
@@ -14,12 +16,16 @@ if __name__ == "__main__":
 
     # fold protein with algorithm
     folder = prt_folder.CharlotteProteinFolder(protein)
+    # profile.run('folder.fold()')
     folder.fold()
     folder.set_score()
     
     time.stop()
 
-    # write protein output to csv-file
+    print(f"Time: {time.get_time()} seconds")
+
+
+    # write protein output to csv-file 
     with open('data/output.csv', 'w') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['amino', 'fold'])
