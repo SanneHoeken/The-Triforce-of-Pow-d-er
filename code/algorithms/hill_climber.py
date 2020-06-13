@@ -99,7 +99,7 @@ class HillClimber():
 
     def undo_mutation(self, previous_configuration):
         
-        # changes all values of protein to values in temporary archive
+        # changes all values of protein to values of previous configuration
         for i, values in enumerate(previous_configuration):
             self.protein.get_aminos()[i].set_fold(values[0])
             self.protein.get_aminos()[i].set_coordinate(values[1][0], values[1][1])
