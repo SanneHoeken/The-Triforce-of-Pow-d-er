@@ -18,7 +18,7 @@ class CharlotteProteinFolder():
         first_protein = Protein(string=protein.get_aminos()[0].type)
         first_protein.aminos[0].set_coordinate(0, 0)
         self.first_node = ProteinTree(first_protein)
-        self.pruning_depth = round(len(protein.get_aminos()) / 2)
+        self.pruning_depth = 7 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
 
     def fold(self, fold_position = 0):
@@ -43,7 +43,7 @@ class CharlotteProteinFolder():
         # Goes through the queue of non_visited_nodes
         while len(non_visited_nodes) > 0:
             
-            node = non_visited_nodes.pop()
+            node = non_visited_nodes.pop(0)
             
             if node.depth >= len(self.source_protein.get_aminos()) - 1:
                 continue
@@ -65,16 +65,17 @@ class CharlotteProteinFolder():
                 x, y = current_amino.coordinate
     
                 folds = self.get_possible_folds(protein, x, y) if node.depth > 0 else [1]
+                next_amino = self.source_protein.get_aminos()[node.depth + 1]
                 # logging.debug(f'Possible folds: {folds}')
                 
                 # Goes through all possible folds from current protein
                 for fold in folds:
-                    new_amino = Amino(node.depth + 1, self.source_protein.get_aminos()[node.depth + 1].type)
-                    new_amino.set_fold(fold)
-                    new_amino.previous_amino = -fold
+                    new_amino = Amino(node.depth + 1, next_amino.type)
+                    current_amino.set_fold(fold)
+                    new_amino.previous_amino = 0 if node.depth == 0 else 0 - fold
                                     
                     # Computes new coordinate for the newly created amino after fold
-                    new_x, new_y = calculate_coordinate(new_amino.fold, x, y)
+                    new_x, new_y = calculate_coordinate(current_amino.fold, x, y)
                     new_amino.set_coordinate(new_x, new_y)
                     # logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
                     
@@ -101,10 +102,11 @@ class CharlotteProteinFolder():
                         if new_node.score <= best_node.score and new_node.depth >= best_node.depth:
                             best_node = new_node
 
-                            if best_node.depth > 0 and node.depth > self.pruning_depth:
-                                self.relevance_score = best_node.score / best_node.depth
+                            if best_node.depth > 0 and node.depth >= self.pruning_depth:
+                                self.relevance_score = best_node.score * 8 / best_node.depth
                             # print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
-                            
+                            # print(f"Current protein = {new_protein.to_string_with_coord()}")
+
             # Updates queue and archive
             visited_nodes.append(node)
         
