@@ -18,7 +18,7 @@ class CharlotteProteinFolder():
         first_protein = Protein(string=protein.get_aminos()[0].type)
         first_protein.aminos[0].set_coordinate(0, 0)
         self.first_node = ProteinTree(first_protein)
-        self.pruning_depth = round(len(protein.get_aminos()) / 2)
+        self.pruning_depth = 7 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
 
     def fold(self, fold_position = 0):
@@ -43,7 +43,7 @@ class CharlotteProteinFolder():
         # Goes through the queue of non_visited_nodes
         while len(non_visited_nodes) > 0:
             
-            node = non_visited_nodes.pop()
+            node = non_visited_nodes.pop(0)
             
             if node.depth >= len(self.source_protein.get_aminos()) - 1:
                 continue
@@ -102,9 +102,10 @@ class CharlotteProteinFolder():
                             best_node = new_node
 
                             if best_node.depth > 0 and node.depth > self.pruning_depth:
-                                self.relevance_score = best_node.score / best_node.depth
-                            # print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
-                            
+                                self.relevance_score = best_node.score * 8 / best_node.depth
+                            print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
+                            print(f"Current protein = {new_protein.to_string_with_coord()}")
+
             # Updates queue and archive
             visited_nodes.append(node)
         

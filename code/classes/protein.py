@@ -98,3 +98,10 @@ class Protein():
             repr += f" [{amino.fold}] {amino.type}"
 
         return repr
+
+    def to_string_with_coord(self):
+        repr = ""
+        for amino in self.aminos:
+            repr += f"{amino.type} ({amino.coordinate}) | "
+
+        return repr
