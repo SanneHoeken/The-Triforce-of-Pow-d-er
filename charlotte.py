@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # print protein score
     if folder.finished_folded_protein.get_score():
         print(f"Score: {folder.finished_folded_protein.get_score()}")
-        print(f"Finished protein: {folder.finished_folded_protein.to_string()}")
+        print(f"Finished protein: {folder.finished_folded_protein.to_string_with_previous()}")
 
     # plot protein
     visualize.visualize_protein(folder.finished_folded_protein)
