@@ -1,5 +1,5 @@
 import random
-from code import Amino, Protein, calculate_score
+from code import calculate_score, Amino, Protein
 
 class BestOfRandom():
 

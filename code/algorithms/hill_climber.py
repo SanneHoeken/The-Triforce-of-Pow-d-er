@@ -1,5 +1,5 @@
-import random, copy
-from code import Amino, Protein, calculate_score, calculate_coordinate
+import random
+from code import calculate_score, calculate_coordinate, Amino, Protein
 
 class HillClimber():
 

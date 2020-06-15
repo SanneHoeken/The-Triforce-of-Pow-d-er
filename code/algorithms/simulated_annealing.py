@@ -1,6 +1,5 @@
 import random, math
-from code import Amino, Protein, calculate_score, calculate_coordinate
-from code.algorithms.hill_climber import HillClimber
+from code import calculate_score, calculate_coordinate, Amino, Protein, HillClimber
 
 class SimulatedAnnealing(HillClimber):
 

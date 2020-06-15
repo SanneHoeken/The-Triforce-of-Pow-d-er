@@ -1,7 +1,5 @@
 from code import Protein, Amino, Timer
-from code.algorithms.greedy import BestGreedy
-from code.algorithms.random import BestOfRandom
-from code.algorithms.hill_climber import HillClimber
+from code import BestGreedy, BestOfRandom, HillClimber
 import matplotlib.pyplot as plt
 import csv
 
