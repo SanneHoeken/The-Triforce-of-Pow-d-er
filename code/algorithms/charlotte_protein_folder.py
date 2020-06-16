@@ -72,7 +72,7 @@ class CharlotteProteinFolder():
                 for fold in folds:
                     new_amino = Amino(node.depth + 1, next_amino.type)
                     current_amino.set_fold(fold)
-                    new_amino.previous_amino = 0 if node.depth == 0 else 0 - fold
+                    new_amino.previous_amino = 0 - fold
                                     
                     # Computes new coordinate for the newly created amino after fold
                     new_x, new_y = calculate_coordinate(current_amino.fold, x, y)
@@ -99,12 +99,12 @@ class CharlotteProteinFolder():
                         # If score has improved, update best node
                         # !! To do: what if after pruning, the best node ends up leading to an impossible protein?
                         # -> Keep track of "best nodes"? Go back in tree?
-                        if new_node.score <= best_node.score and new_node.depth >= best_node.depth:
+                        if new_node.score < best_node.score:
                             best_node = new_node
 
                             if best_node.depth > 0 and node.depth >= self.pruning_depth:
                                 self.relevance_score = best_node.score * 8 / best_node.depth
-                            # print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
+                            print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
                             # print(f"Current protein = {new_protein.to_string_with_coord()}")
 
             # Updates queue and archive
