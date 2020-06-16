@@ -29,7 +29,7 @@ class BestOfRandom():
         # set values of input protein to best values
         for i, values in enumerate(self.best_protein):
             self.protein.get_aminos()[i].set_fold(values[0])
-            self.protein.get_aminos()[i].set_coordinate(values[1][0], values[1][1])
+            self.protein.get_aminos()[i].set_coordinate(values[1])
             self.protein.get_aminos()[i].set_previous_amino(-values[0] if values[0] is not None else None)
         
         self.protein.set_score(self.best_score)
@@ -104,16 +104,24 @@ class RandomFolder():
         
         possible_values = []
 
-        if amino.coordinate:
+        # generates values for 2D-amino
+        if len(amino.coordinate) == 2:
             x, y = amino.coordinate
         
             # dict with all possible fold-coordinate combinations 
             values = {1: (x+1, y), -1: (x-1, y), 2:(x, y+1), -2: (x, y-1)} 
 
-            # add possible folds to list
-            for fold, coordinate in values.items(): 
-                if self.is_free_space(coordinate):
-                    possible_values.append((fold, coordinate))
+        # generates values for 3D amino
+        if len(amino.coordinate) == 3:
+            x, y, z = amino.coordinate
+
+            # dict with all possible fold-coordinate combinations 
+            values = {1: (x+1, y, z), -1: (x-1, y, z), 2:(x, y+1, z), -2: (x, y-1, z), 3: (x, y, z+1), -3: (x, y, z-1)} 
+
+        # add possible folds to list
+        for fold, coordinate in values.items(): 
+            if self.is_free_space(coordinate):
+                possible_values.append((fold, coordinate))
 
         return possible_values
 
@@ -130,7 +138,7 @@ class RandomFolder():
         self.protein.aminos[id].set_fold(values[0])
 
         # set coordinate en previous amino of next amino
-        self.protein.aminos[id + 1].set_coordinate(values[1][0], values[1][1])
+        self.protein.aminos[id + 1].set_coordinate(values[1])
         self.protein.aminos[id + 1].set_previous_amino(-values[0])
         
         # return score of new configuration

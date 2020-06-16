@@ -1,0 +1,65 @@
+algorithms,length,cysteine,dimensionality,scores,runtime
+Random,14,without C,2,-6,0.7867
+Greedy,14,False,2,-6,2.7706
+Hillclimber,14,False,2,-6,2.3472
+Simulating Annealing,14,False,2,-7,2.0689
+Random,14,without C,3,-6,1.4255
+Greedy,14,False,3,-7,7.8906
+Hillclimber,14,False,3,-8,2.77
+Simulating Annealing,14,False,3,-8,2.6119
+Random,20,without C,2,-6,1.3656
+Greedy,20,False,2,-8,5.0523
+Hillclimber,20,False,2,-7,2.809
+Simulating Annealing,20,False,2,-7,2.4921
+Random,20,without C,3,-6,2.2817
+Greedy,20,False,3,-11,11.4528
+Hillclimber,20,False,3,-11,3.8314
+Simulating Annealing,20,False,3,-10,3.1871
+Random,36,without C,2,-9,4.3998
+Greedy,36,False,2,-11,15.2394
+Hillclimber,36,False,2,-11,7.3471
+Simulating Annealing,36,False,2,-10,4.7966
+Random,36,without C,3,-8,8.4031
+Greedy,36,False,3,-15,37.2424
+Hillclimber,36,False,3,-16,6.0955
+Simulating Annealing,36,False,3,-15,8.1265
+Random,50,without C,2,-10,13.2298
+Greedy,50,False,2,-15,38.1107
+Hillclimber,50,False,2,-15,7.6523
+Simulating Annealing,50,False,2,-14,6.3315
+Random,50,without C,3,-13,16.2909
+Greedy,50,False,3,-22,78.5864
+Hillclimber,50,False,3,-23,10.3154
+Simulating Annealing,50,False,3,-24,10.041
+Random,36,with C,2,-17,5.168
+Greedy,36,True,2,-17,16.6253
+Hillclimber,36,True,2,-19,4.7576
+Simulating Annealing,36,True,2,-13,4.6938
+Random,36,with C,3,-15,7.6117
+Greedy,36,True,3,-31,37.5917
+Hillclimber,36,True,3,-32,6.3949
+Simulating Annealing,36,True,3,-35,6.0558
+Random,36,with C,2,-24,5.3908
+Greedy,36,True,2,-32,15.787
+Hillclimber,36,True,2,-34,5.1568
+Simulating Annealing,36,True,2,-23,5.0386
+Random,36,with C,3,-24,8.9243
+Greedy,36,True,3,-45,39.6946
+Hillclimber,36,True,3,-51,6.9961
+Simulating Annealing,36,True,3,-46,7.0125
+Random,50,with C,2,-18,12.5277
+Greedy,50,True,2,-24,38.0768
+Hillclimber,50,True,2,-24,7.5662
+Simulating Annealing,50,True,2,-24,7.914
+Random,50,with C,3,-22,21.4248
+Greedy,50,True,3,-36,94.3823
+Hillclimber,50,True,3,-42,11.0038
+Simulating Annealing,50,True,3,-36,10.1577
+Random,50,with C,2,-16,12.4547
+Greedy,50,True,2,-27,37.2047
+Hillclimber,50,True,2,-24,6.9959
+Simulating Annealing,50,True,2,-22,6.4678
+Random,50,with C,3,-18,17.6108
+Greedy,50,True,3,-46,91.4181
+Hillclimber,50,True,3,-39,13.3054
+Simulating Annealing,50,True,3,-46,11.1871

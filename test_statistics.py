@@ -1,16 +1,18 @@
 from code import Protein, Amino, Timer
-from code import BestGreedy, BestOfRandom, HillClimber
+from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing
 import matplotlib.pyplot as plt
 import csv
 
 if __name__ == "__main__":
-
+    
     time = Timer()
 
+    algorithms = []
     scores = []
     length = []
     cysteine = []
     times = []
+    dimensionalities = []
 
     # open source file and read first line
     with open('data/all_proteins.txt', 'r') as infile:
@@ -18,63 +20,272 @@ if __name__ == "__main__":
 
     for i, line in enumerate(proteins):
         
+        line = line.replace('\n', '')
+
+        """
+        RANDOM
+        """
+        algorithm = "Random"
+        
         # intialize protein
         protein = Protein(string=line)
 
-        time.start()
-
         # fold protein and set score with algorithm
         folder = BestOfRandom(protein, iterations=1000)
+
+        time.start() 
+
         folder.run()
-        
-        time.stop()
+
+        time.stop() 
 
         # get score
         score = folder.protein.get_score()
 
+        algorithms.append(algorithm)
         length.append(len(line))
-        cysteine.append('C' in line)
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(2)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        GREEDY
+        """
+        algorithm = "Greedy"
+        
+        # intialize protein
+        protein = Protein(string=line)
+
+        # fold protein and set score with algorithm
+        folder = BestGreedy(protein, iterations=1000)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(2)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        HILLCLIMBER
+        """
+        algorithm = "Hillclimber"
+        
+        # intialize protein
+        protein = Protein(string=line)
+
+        # fold protein and set score with algorithm
+        greedy = BestGreedy(protein, iterations=1000)
+        greedy.run()
+        folder = HillClimber(greedy.protein, iterations=10000, mutations_per_iteration=3)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(2)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        SIMULATING ANNEALING
+        """
+        algorithm = "Simulating Annealing"
+        
+        # intialize protein
+        protein = Protein(string=line)
+
+        # fold protein and set score with algorithm
+        greedy = BestGreedy(protein, iterations=1000)
+        greedy.run()
+        folder = SimulatedAnnealing(greedy.protein, iterations=10000, mutations_per_iteration=3, temperature=1)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(2)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        RANDOM 3D
+        """
+        algorithm = "Random"
+        
+        # intialize protein
+        protein = Protein(string=line, dimensionality=3)
+
+        # fold protein and set score with algorithm
+        folder = BestOfRandom(protein, iterations=1000)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(3)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        GREEDY 3D
+        """
+        algorithm = "Greedy"
+        
+        # intialize protein
+        protein = Protein(string=line, dimensionality=3)
+
+        # fold protein and set score with algorithm
+        folder = BestGreedy(protein, iterations=1000)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(3)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        HILLCLIMBER 3D
+        """
+        algorithm = "Hillclimber"
+        
+        # intialize protein
+        protein = Protein(string=line, dimensionality=3)
+
+        # fold protein and set score with algorithm
+        greedy = BestGreedy(protein, iterations=1000)
+        greedy.run()
+        folder = HillClimber(greedy.protein, iterations=10000, mutations_per_iteration=3)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(3)
+        scores.append(score)
+        times.append(time.get_time())
+
+        """
+        SIMULATING ANNEALING 3D
+        """
+        algorithm = "Simulating Annealing"
+        
+        # intialize protein
+        protein = Protein(string=line, dimensionality=3)
+
+        # fold protein and set score with algorithm
+        greedy = BestGreedy(protein, iterations=1000)
+        greedy.run()
+        folder = SimulatedAnnealing(greedy.protein, iterations=10000, mutations_per_iteration=3, temperature=1)
+
+        time.start() 
+
+        folder.run()
+
+        time.stop() 
+
+        # get score
+        score = folder.protein.get_score()
+
+        algorithms.append(algorithm)
+        length.append(len(line))
+        cysteine.append('with C' if 'C' in line else 'without C')
+        dimensionalities.append(3)
         scores.append(score)
         times.append(time.get_time())
 
 
-    with open('data/random_stats.csv', 'w') as f:
+    with open('data/all_stats.csv', 'w') as f:
         writer = csv.writer(f)
-        writer.writerows(zip(length, cysteine, scores, times))
+        writer.writerow(['algorithms', 'length', 'cysteine', 'dimensionality', 'scores', 'runtime'])
+        writer.writerows(zip(algorithms, length, cysteine, dimensionalities, scores, times))
 
 
     """
+    OTHER STATS
 
     string = 'PPCHHPPCHPPPPCHHHHCHHPPHHPPPPHHPPHPP'
 
-    iterations_list = list(range(1, 1000, 10))
-    scores = []
+    mutation = list(range(1, 10))
+    deltas = []
 
-    for iterations in iterations_list:
+    for i in mutation:
         
         # intialize protein
         protein = Protein(string=string)
 
+        greedy = BestGreedy(protein, iterations=1)
+        greedy.run()
+
+        # add score of protein to list
+        greedy_score = greedy.protein.get_score()
+
         # fold protein and set score with algorithm
-        folder = BestGreedy(protein, iterations=iterations)
+        folder = HillClimber(greedy.protein, iterations=100000, mutations_per_iteration=i)
         folder.run()
 
         # add score of protein to list
         score = folder.protein.get_score()
-        print(iterations, score)
-        scores.append(score)
-
-    # save stats
-    with open('data/greedy_stats.csv', 'w') as f:
-        writer = csv.writer(f)
-        writer.writerows(zip(iterations_list, scores))
+        deltas.append(score - greedy_score)
     
     # plot scores against number of iterations
     plt.figure()
-    plt.plot(iterations_list, scores)
-    plt.title('Greedy algorithm (protein length: 36)')
-    plt.xlabel('iterations')
-    plt.ylabel('score')
-    plt.show() 
+    plt.plot(mutation, deltas)
+    plt.title('HillClimber algorithm (protein length: 36)')
+    plt.xlabel('Mutations per iteration')
+    plt.ylabel('Score improvement')
+    plt.show()
 
-    """  
+    """

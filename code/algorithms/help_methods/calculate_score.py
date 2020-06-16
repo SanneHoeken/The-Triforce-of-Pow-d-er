@@ -10,14 +10,20 @@ def calculate_score(protein):
         if amino.coordinate is not None:
 
             if amino.type == 'H' or amino.type == 'C':
-                x, y = amino.coordinate
 
-                # initializes not-connected directions
-                free_folds = list({-2, 2, -1, 1} - {amino.previous_amino, amino.fold})
+                if len(amino.coordinate) == 2:
+
+                    # initializes not-connected directions
+                    free_folds = list({-2, 2, -1, 1} - {amino.previous_amino, amino.fold})
                 
+                if len(amino.coordinate) == 3:
+
+                    # initializes not-connected directions
+                    free_folds = list({-3, 3, -2, 2, -1, 1} - {amino.previous_amino, amino.fold})
+                    
                 # checks for every not-connected direction if H-amino is present
                 for fold in free_folds:
-                    next_coordinate = calculate_coordinate(fold, x, y)
+                    next_coordinate = calculate_coordinate(fold, amino.coordinate)
 
                     # checks for hydrophobe/cysteine neighbor and changes score
                     neighbor = protein.get_amino(next_coordinate)
