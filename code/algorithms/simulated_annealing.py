@@ -1,5 +1,5 @@
 import random, math
-from code import calculate_score, calculate_coordinate, Amino, Protein, HillClimber
+from code import visualize, calculate_score, calculate_coordinate, Amino, Protein, HillClimber
 
 class SimulatedAnnealing(HillClimber):
     """
@@ -23,8 +23,10 @@ class SimulatedAnnealing(HillClimber):
             # store values of current protein configuration
             self.archive = [(amino.fold, amino.coordinate) for amino in self.protein.get_aminos()]
             
-            for j in range(self.mutations_per_iteration):
-
+            mutation_count = 0
+            
+            while mutation_count < self.mutations_per_iteration:
+                
                 # store values of current protein configuration
                 self.tmp_archive = [(amino.fold, amino.coordinate) for amino in self.protein.get_aminos()]
                 
@@ -34,6 +36,8 @@ class SimulatedAnnealing(HillClimber):
                 # undo mutation if new configuration is not valid
                 if not self.is_valid_protein():
                     self.undo_mutation(self.tmp_archive)
+                else:
+                    mutation_count += 1
 
             # calculate score of mutated configuration
             score = calculate_score(self.protein)

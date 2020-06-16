@@ -26,7 +26,9 @@ class HillClimber():
             # store values of current protein configuration
             self.archive = [(amino.fold, amino.coordinate) for amino in self.protein.get_aminos()]
             
-            for j in range(self.mutations_per_iteration):
+            mutation_count = 0
+            
+            while mutation_count < self.mutations_per_iteration:
 
                 # store values of current protein configuration
                 self.tmp_archive = [(amino.fold, amino.coordinate) for amino in self.protein.get_aminos()]
@@ -37,6 +39,8 @@ class HillClimber():
                 # undo mutation if new configuration is not valid
                 if not self.is_valid_protein():
                     self.undo_mutation(self.tmp_archive)
+                else:
+                    mutation_count += 1
 
             # update best score if new configuration is better, else undo mutation series
             score = calculate_score(self.protein)
@@ -56,6 +60,7 @@ class HillClimber():
         """
         # get mutation values: position of amino and new fold
         pos, fold = self.generate_mutation()
+        print(pos, fold)
         
         co = (None, None)
 
