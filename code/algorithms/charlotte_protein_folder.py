@@ -18,8 +18,11 @@ class CharlotteProteinFolder():
         first_protein = Protein(string=protein.get_aminos()[0].type)
         first_protein.aminos[0].set_coordinate(0, 0)
         self.first_node = ProteinTree(first_protein)
-        self.pruning_depth = 7 #round(len(protein.get_aminos()) / 2)
+        self.pruning_depth = 10 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
+        self.pruning_distance = 0
+        self.node_count = 0
+        self.max_queue_size = 1000
 
     def fold(self, fold_position = 0):
         """
@@ -85,12 +88,14 @@ class CharlotteProteinFolder():
                     
                     curr_score = calculate_score(new_protein)
                     
-                    if curr_score <= self.relevance_score:
+                    # Pruning: only adds 1 node per pruning_distance
+                    if curr_score <= self.relevance_score and (len(non_visited_nodes) < self.max_queue_size or self.node_count < non_visited_nodes[-1].id + node.depth):
                         # Creates new node for the current protein
-                        new_node = ProteinTree(new_protein, node, node.depth + 1)
+                        new_node = ProteinTree(new_protein, node, node.depth + 1, self.node_count + 1)
                         new_node.score = curr_score
 
                         node.next_amino.append(new_node)
+                        self.node_count = self.node_count + 1
                         # logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
                         
                         # Adds node to queue
@@ -103,7 +108,7 @@ class CharlotteProteinFolder():
                             best_node = new_node
 
                             if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                self.relevance_score = best_node.score * 8 / best_node.depth
+                                self.relevance_score = best_node.score + 1
                             print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
                             # print(f"Current protein = {new_protein.to_string_with_coord()}")
 

@@ -4,7 +4,7 @@ from .amino import Amino
 # Note: I haven't tried using this class yet!
 class ProteinTree():
 
-    def __init__(self, origin, parent = None, depth = 0):
+    def __init__(self, origin, parent = None, depth = 0, id = 0):
         """
         ProteinTree class
         Init takes origin (Protein object) as argument.
@@ -18,6 +18,7 @@ class ProteinTree():
         self.next_amino = []
         self.depth = depth
         self.score = 0
+        self.id = 0
 
     def add_amino(self, amino):
         """
