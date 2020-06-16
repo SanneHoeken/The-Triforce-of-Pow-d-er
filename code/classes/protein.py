@@ -3,11 +3,12 @@ from .amino import Amino
 
 class Protein():
 
-    def __init__(self, **kwargs):
+    def __init__(self, dimensionality=2, **kwargs):
         self.source_file = kwargs.get('file', None)
         self.source_string = kwargs.get('string', None)
         self.source_protein = kwargs.get('protein', None)
         self.source_new_amino = kwargs.get('new_amino', None)
+        self.D = dimensionality
         self.aminos = []
         self.load_aminos()
         self.set_first_amino()
@@ -56,7 +57,12 @@ class Protein():
         
         # set coordinate and previous amino of first amino to zero
         if self.aminos[0] is not None:
-            self.aminos[0].set_coordinate(0, 0)
+
+            if self.D == 2:
+                self.aminos[0].set_coordinate((0, 0))
+            elif self.D == 3:
+                self.aminos[0].set_coordinate((0, 0, 0))
+                
             self.aminos[0].set_previous_amino(0)
 
         return self.aminos

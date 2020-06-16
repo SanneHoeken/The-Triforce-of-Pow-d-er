@@ -30,7 +30,7 @@ class BestGreedy():
         # set values of input protein to best values
         for i, values in enumerate(self.best_protein):
             self.protein.get_aminos()[i].set_fold(values[0])
-            self.protein.get_aminos()[i].set_coordinate(values[1][0], values[1][1])
+            self.protein.get_aminos()[i].set_coordinate(values[1])
             self.protein.get_aminos()[i].set_previous_amino(-values[0] if values[0] is not None else None)
         
         self.protein.set_score(self.best_score)    

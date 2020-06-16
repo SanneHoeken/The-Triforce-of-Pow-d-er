@@ -5,13 +5,13 @@ from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing
 
 if __name__ == "__main__":
 
-    time = Timer() # do we keep this in main.py ?
+    time = Timer()
 
     protein_input = input("Protein string: ")
     algorithm_input = input("Algorithm: ")
+    d_input = int(input("Dimensionality: "))
 
-    # initialize protein
-    protein = Protein(string=protein_input)
+    protein = Protein(string=protein_input, dimensionality=d_input)
 
     """
     RANDOM

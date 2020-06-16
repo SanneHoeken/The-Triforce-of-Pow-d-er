@@ -48,7 +48,7 @@ class HillClimber():
         # get mutation values: position of amino and new fold
         pos, fold = self.generate_mutation()
         
-        x, y = (None, None)
+        co = (None, None)
 
         for amino in self.protein.get_aminos()[pos: self.protein_length]:
             
@@ -57,26 +57,26 @@ class HillClimber():
                 amino.set_fold(fold)
 
                 # update coordinate
-                x, y = amino.coordinate
+                co = amino.coordinate
 
             # change coordinates and previous amino-fold for amino after selected amino
             elif amino.id == pos + 1:
-                new_x, new_y = calculate_coordinate(fold, x, y)
+                new_co = calculate_coordinate(fold, co)
                 amino.set_previous_amino(-fold)
-                amino.set_coordinate(new_x, new_y)
+                amino.set_coordinate(new_co)
 
                 # update fold and coordinate
                 fold = amino.fold
-                x, y = new_x, new_y
+                co = new_co
 
             # change coordinates for every amino after selected amino
             else:
-                new_x, new_y = calculate_coordinate(fold, x, y)
-                amino.set_coordinate(new_x, new_y)
+                new_co = calculate_coordinate(fold, co)
+                amino.set_coordinate(new_co)
 
                 # update fold and coordinate
                 fold = amino.fold
-                x, y = new_x, new_y
+                co = new_co
     
 
     def generate_mutation(self):
@@ -85,13 +85,18 @@ class HillClimber():
         position = random.randint(0, self.protein_length - 1)
 
         # choose random fold
-        new_fold = random.choice([-2, 2, -1, 1])
+        if len(self.protein.get_aminos()[0].coordinate) == 2: 
+            new_fold = random.choice([-2, 2, -1, 1])
+
+        if len(self.protein.get_aminos()[0].coordinate) == 3: 
+            new_fold = random.choice([-3, 3, -2, 2, -1, 1])
+        
         return position, new_fold
 
 
     def is_valid_protein(self):
 
-        # returns Ture if no double coordinates in protein
+        # returns True if no double coordinates in protein
         coordinates = [amino.coordinate for amino in self.protein.get_aminos()]
         
         return len(set(coordinates)) == len(coordinates)
@@ -102,5 +107,5 @@ class HillClimber():
         # changes all values of protein to values of previous configuration
         for i, values in enumerate(previous_configuration):
             self.protein.get_aminos()[i].set_fold(values[0])
-            self.protein.get_aminos()[i].set_coordinate(values[1][0], values[1][1])
+            self.protein.get_aminos()[i].set_coordinate(values[1])
             self.protein.get_aminos()[i].set_previous_amino(-values[0] if values[0] is not None else None)
