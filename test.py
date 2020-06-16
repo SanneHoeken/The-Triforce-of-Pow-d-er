@@ -30,6 +30,8 @@ if __name__ == "__main__":
     # print protein score
     if protein.get_score():
         print(f"Score: {protein.get_score()}")
+        print(f"Finished protein: {protein.to_string_with_previous()}")
+
 
     # plot protein
     visualize.visualize_protein(protein)
