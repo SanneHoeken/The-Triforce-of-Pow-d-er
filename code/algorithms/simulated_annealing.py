@@ -50,7 +50,7 @@ class SimulatedAnnealing(HillClimber):
 
             # update temperature
             self.update_temperature()
-            
+
         # set score of protein
         self.protein.set_score(self.best_score)
 
