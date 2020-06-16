@@ -2,7 +2,10 @@ import random
 from code import calculate_score, calculate_coordinate, Amino, Protein
 
 class HillClimber():
-
+    """
+    The HillClimber class that mutates a protein i times by changing n random amino folds. 
+    Each improvement is kept for the next iteration if the mutated protein is valid.
+    """
     def __init__(self, protein, iterations=1, mutations_per_iteration=1):
         self.protein = protein
         self.protein_length = len(self.protein.get_aminos())
@@ -14,7 +17,10 @@ class HillClimber():
     
 
     def run(self):
-        
+        """
+        Runs the Hillclimber algorithm for a specific amount of iterations with
+        a specified amount of mutations per iteration.
+        """
         for i in range(self.iterations):
 
             # store values of current protein configuration
@@ -44,12 +50,16 @@ class HillClimber():
 
 
     def mutate(self):
-
+        """
+        Mutates a protein by changing a random amino fold and adjusting all
+        amino values in the protein to that change.
+        """
         # get mutation values: position of amino and new fold
         pos, fold = self.generate_mutation()
         
         co = (None, None)
 
+        # iterates over every amino starting at the mutation's position
         for amino in self.protein.get_aminos()[pos: self.protein_length]:
             
             # change fold for selected amino
@@ -59,7 +69,7 @@ class HillClimber():
                 # update coordinate
                 co = amino.coordinate
 
-            # change coordinates and previous amino-fold for amino after selected amino
+            # change coordinates and previous amino for amino after selected amino
             elif amino.id == pos + 1:
                 new_co = calculate_coordinate(fold, co)
                 amino.set_previous_amino(-fold)
@@ -80,22 +90,36 @@ class HillClimber():
     
 
     def generate_mutation(self):
-
-        # choose random position
+        """
+        Retrieves randomly an amino position and a new fold
+        """
+        # choose random position of amino
         position = random.randint(0, self.protein_length - 1)
 
-        # choose random fold
-        if len(self.protein.get_aminos()[0].coordinate) == 2: 
-            new_fold = random.choice([-2, 2, -1, 1])
+        # set new fold to amino's current fold
+        new_fold = self.protein.get_aminos()[position].fold
 
-        if len(self.protein.get_aminos()[0].coordinate) == 3: 
-            new_fold = random.choice([-3, 3, -2, 2, -1, 1])
+        # retrieve new fold if protein is 2D
+        if len(self.protein.get_aminos()[0].coordinate) == 2: 
+            
+            # choose new fold randomly until amino's fold is changed
+            while self.protein.get_aminos()[position].fold != new_fold:
+                new_fold = random.choice([-2, 2, -1, 1])
+
+        # retrieve new fold if protein is 3D
+        elif len(self.protein.get_aminos()[0].coordinate) == 3: 
+            
+            # choose new fold randomly until amino's fold is changed
+            while self.protein.get_aminos()[position].fold != new_fold:
+                new_fold = random.choice([-3, 3, -2, 2, -1, 1])
         
         return position, new_fold
 
 
     def is_valid_protein(self):
-
+        """
+        Checks whether protein configuration is valid
+        """
         # returns True if no double coordinates in protein
         coordinates = [amino.coordinate for amino in self.protein.get_aminos()]
         
@@ -103,8 +127,9 @@ class HillClimber():
 
 
     def undo_mutation(self, previous_configuration):
-        
-        # changes all values of protein to values of previous configuration
+        """
+        Sets all values of protein to values of specified previous configuration
+        """
         for i, values in enumerate(previous_configuration):
             self.protein.get_aminos()[i].set_fold(values[0])
             self.protein.get_aminos()[i].set_coordinate(values[1])
