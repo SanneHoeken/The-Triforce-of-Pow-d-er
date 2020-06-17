@@ -1,5 +1,7 @@
 import csv
 import profile
+import pickle
+import os
 
 from code.visualisations import visualize
 from code.classes import protein as prt, amino, timer
@@ -7,6 +9,9 @@ from code.algorithms import charlotte_protein_folder as prt_folder
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
+
+    pickled = {}
+    pickle_path = "./charlotte_pickles/pickle" + str(len(os.listdir("./charlotte_pickles")))
 
     # intialize protein
     protein = prt.Protein(file=data_file)
@@ -24,6 +29,11 @@ if __name__ == "__main__":
 
     print(f"Time: {time.get_time()} seconds")
 
+    pickled['protein'] = protein
+    pickled['folder'] = folder
+    pickled['score'] = protein.score
+    pickled['time'] = time.get_time()
+    pickle.dump(pickled, pickle_path)
 
     # write protein output to csv-file 
     with open('data/output.csv', 'w') as csvfile:
