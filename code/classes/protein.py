@@ -37,6 +37,7 @@ class Protein():
             # open source file and read first line
             with open(self.source_file, 'r') as infile:
                 protein_string = infile.readline()
+                self.source_string = protein_string
 
         elif self.source_string:
             protein_string = self.source_string

@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     # Pickling
     pickled = {}
-    pickled['protein'] = protein.to_string()
+    pickled['protein'] = protein.source_string
     pickled['folder'] = folder
     pickled['pruning_depth'] = folder.pruning_depth
     pickled['pruning_distance_heur'] = folder.pruning_distance_heur
@@ -37,8 +37,7 @@ if __name__ == "__main__":
     pickled['time'] = time.get_time()
     saved_file = store_pickle("charlotte_pickles", pickled)
     
-    retrieved_pickle = get_pickle("charlotte_pickles/pickle0")
-    show_all_pickles("charlotte_pickles")
+    show_pickle(saved_file)
 
     # write protein output to csv-file 
     with open('data/output.csv', 'w') as csvfile:
