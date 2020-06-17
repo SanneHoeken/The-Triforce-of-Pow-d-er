@@ -82,22 +82,23 @@ class BBProteinFolder():
                 x, y = current_amino.coordinate
     
                 folds = self.get_possible_folds(protein, x, y) if node.depth > 0 else [1]
-                #logging.debug(f'Possible folds: {folds}')
+                logging.debug(f'Possible folds: {folds}')
 
              
                 if node.depth == len(self.source_protein.get_aminos()) - 1:
                     continue
 
+                
                 # Goes through all possible folds from current protein
                 for fold in folds:
                     new_amino = Amino(node.depth + 1, self.source_protein.get_aminos()[node.depth + 1].type)
-                    new_amino.set_fold(fold)
+                    current_amino.set_fold(fold)
                     new_amino.previous_amino = 0 - fold
 
                     # Computes new coordinate for the newly created amino after fold
-                    new_x, new_y = calculate_coordinate(new_amino.fold, (x, y))
+                    new_x, new_y = calculate_coordinate(current_amino.fold, (x, y))
                     new_amino.set_coordinate((new_x, new_y))
-                    #logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
+                    logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
                     
                     # Copies current protein and add new amino at the end
                     new_protein = copy.deepcopy(protein)
