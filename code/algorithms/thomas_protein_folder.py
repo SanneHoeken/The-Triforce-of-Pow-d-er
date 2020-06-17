@@ -92,7 +92,7 @@ class BBProteinFolder():
                 for fold in folds:
                     new_amino = Amino(node.depth + 1, self.source_protein.get_aminos()[node.depth + 1].type)
                     new_amino.set_fold(fold)
-                    new_amino.previous_amino = -fold
+                    new_amino.previous_amino = 0 - fold
 
                     # Computes new coordinate for the newly created amino after fold
                     new_x, new_y = calculate_coordinate(new_amino.fold, (x, y))
@@ -128,6 +128,7 @@ class BBProteinFolder():
         protein = best_node.current_protein
                      
         self.finished_folded_protein = protein
+        print(f"{protein.to_string()}")
         print(f"Protein score: {calculate_score(protein)}")
         print(f"Depth = {best_node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
 
