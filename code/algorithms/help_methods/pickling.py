@@ -26,5 +26,5 @@ def get_pickle(file_path):
 
 def show_all_pickles(directory_path):
     for file in os.listdir(directory_path):
-        print(f"#### Pickle from { file } ####")
+        print(f"\n#### Pickle from { file } ####")
         show_pickle(directory_path +  "/" + file)

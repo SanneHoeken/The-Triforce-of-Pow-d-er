@@ -20,7 +20,9 @@ class CharlotteProteinFolder():
         self.first_node = ProteinTree(first_protein)
         self.pruning_depth = 17 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
+        self.relevance_score_heur = "best_node.score * 2 - (self.source_protein.source_string.count('P')/len(self.source_protein.source_string))"
         self.pruning_distance = 0
+        self.pruning_distance_heur = "node.depth"
         self.node_count = 0
         self.max_queue_size = 1000
 
