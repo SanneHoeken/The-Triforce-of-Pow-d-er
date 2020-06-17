@@ -8,6 +8,7 @@ __pycache__/*
 output.csv
 protein.txt
 charlotte.log
+thomas.log
 notes_charlotte.txt
 data/output.csv
 data/proteins.txt

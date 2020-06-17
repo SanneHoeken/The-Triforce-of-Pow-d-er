@@ -18,7 +18,7 @@ class CharlotteProteinFolder():
         first_protein = Protein(string=protein.get_aminos()[0].type)
         first_protein.aminos[0].set_coordinate((0, 0))
         self.first_node = ProteinTree(first_protein)
-        self.pruning_depth = 15 #round(len(protein.get_aminos()) / 2)
+        self.pruning_depth = 17 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
         self.pruning_distance = 0
         self.node_count = 0
@@ -35,7 +35,7 @@ class CharlotteProteinFolder():
         No pruning yet.
         Returns nothing.
         """
-        # logging.basicConfig(filename='charlotte.log',level=logging.DEBUG)
+        logging.basicConfig(filename='charlotte.log',level=logging.DEBUG)
         
         # set first coordinate to (0,0) and occupied fold to 0
         non_visited_nodes = []
@@ -97,7 +97,7 @@ class CharlotteProteinFolder():
                         self.node_count = self.node_count + 1
                         node.next_amino.append(new_node)
                             
-                        if (len(non_visited_nodes) < self.max_queue_size) or (self.node_count < (non_visited_nodes[-1].id + node.depth)):
+                        if (len(non_visited_nodes) < self.max_queue_size) and (len(non_visited_nodes) == 0 or self.node_count >= (non_visited_nodes[-1].id + node.depth)):
                             # logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
                             
                             # Adds node to queue
@@ -110,13 +110,13 @@ class CharlotteProteinFolder():
                                 best_node = new_node
 
                                 if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                    self.relevance_score = best_node.score + 1
+                                    self.relevance_score = best_node.score * 2 - (self.source_protein.source_string.count('P')/len(self.source_protein.source_string))
                                     good_but_pruned.clear()
-                                print(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
-                                # print(f"Current protein = {new_protein.to_string_with_coord()}")
+                                # logging.debug(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
+                                # logging.debug(f"Current protein = {new_protein.to_string_with_coord()}")
                         elif len(good_but_pruned) < self.max_queue_size:
                             good_but_pruned.append(new_node)
-                            print(f"Added node to good_but_pruned, current size = { len(good_but_pruned) }")
+                            # logging.debug(f"Added node to good_but_pruned, current size = { len(good_but_pruned) }")
 
 
 
@@ -127,7 +127,7 @@ class CharlotteProteinFolder():
                 non_visited_nodes.append(good_but_pruned.pop())
                 print("Taking node from good_but_pruned")
             else: 
-                print("")
+                print(f"Non visited nodes size = { len(non_visited_nodes) }, best_node depth = { best_node.depth }, current depth = { node.depth }, origin size = { len(self.source_protein.aminos) }")
         
         # Picks best node
         protein = best_node.current_protein

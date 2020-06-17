@@ -1,5 +1,5 @@
 import random, math
-from code import calculate_score, calculate_coordinate, Amino, Protein, HillClimber
+from code import visualize, calculate_score, calculate_coordinate, Amino, Protein, HillClimber
 
 class SimulatedAnnealing(HillClimber):
     """
@@ -21,12 +21,15 @@ class SimulatedAnnealing(HillClimber):
         for i in range(self.iterations):
 
             # store values of current protein configuration
-            self.archive = [(amino.fold, amino.coordinate) for amino in self.protein.get_aminos()]
+            self.archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
             
-            for j in range(self.mutations_per_iteration):
-
+            # consecultively mutates protein specified times
+            mutation_count = 0
+            
+            while mutation_count < self.mutations_per_iteration:
+                
                 # store values of current protein configuration
-                self.tmp_archive = [(amino.fold, amino.coordinate) for amino in self.protein.get_aminos()]
+                self.tmp_archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
                 
                 # mutate protein
                 self.mutate()
@@ -34,13 +37,15 @@ class SimulatedAnnealing(HillClimber):
                 # undo mutation if new configuration is not valid
                 if not self.is_valid_protein():
                     self.undo_mutation(self.tmp_archive)
+                else:
+                    mutation_count += 1
 
             # calculate score of mutated configuration
             score = calculate_score(self.protein)
 
             # calculate probability of accepting the mutated configuration
             probability = math.exp((self.best_score - score) / self.T)
-
+            
             # update best score if acceptance probability is higher than random probabiity
             # else undo mutation series
             if random.random() < probability:
@@ -50,7 +55,7 @@ class SimulatedAnnealing(HillClimber):
 
             # update temperature
             self.update_temperature()
-            
+
         # set score of protein
         self.protein.set_score(self.best_score)
 

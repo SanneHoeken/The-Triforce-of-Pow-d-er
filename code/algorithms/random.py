@@ -27,7 +27,7 @@ class BestOfRandom():
             # update protein values en score if score is lower
             if score < self.best_score:
                 self.best_score = score
-                self.best_protein = [(amino.fold, amino.coordinate) for amino in random_folder.protein.get_aminos()]
+                self.best_protein = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in random_folder.protein.get_aminos()]
 
             # reset protein
             for amino in self.protein.get_aminos()[1:]:
@@ -37,7 +37,7 @@ class BestOfRandom():
         for i, values in enumerate(self.best_protein):
             self.protein.get_aminos()[i].set_fold(values[0])
             self.protein.get_aminos()[i].set_coordinate(values[1])
-            self.protein.get_aminos()[i].set_previous_amino(-values[0] if values[0] is not None else None)
+            self.protein.get_aminos()[i].set_previous_amino(values[2])
         
         self.protein.set_score(self.best_score)
 

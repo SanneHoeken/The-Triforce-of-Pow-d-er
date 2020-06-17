@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
         iters = int(input("Iterations for Simulated Annealing: "))
         muts = int(input("Mutations per iteration: "))
-        temp = int(input("Temperature: "))
+        temp = float(input("Temperature: "))
 
         print("Running algorithm ...")
 
