@@ -1,7 +1,9 @@
 from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 
 def calculate_score(protein):
-        
+    """
+    Method that takes a protein and returns its stability score
+    """ 
     score = 0
 
     # checks for every H- or C- amino in protein if not-connected neighbor is H-amino
@@ -11,18 +13,18 @@ def calculate_score(protein):
 
             if amino.type == 'H' or amino.type == 'C':
 
+                # initializes not-connected directions if protein is 2D
                 if len(amino.coordinate) == 2:
-
-                    # initializes not-connected directions
                     free_folds = list({-2, 2, -1, 1} - {amino.previous_amino, amino.fold})
                 
-                if len(amino.coordinate) == 3:
-
-                    # initializes not-connected directions
+                # initializes not-connected directions if protein is 3D
+                elif len(amino.coordinate) == 3:
                     free_folds = list({-3, 3, -2, 2, -1, 1} - {amino.previous_amino, amino.fold})
                     
-                # checks for every not-connected direction if H-amino is present
+                # checks for every not-connected direction if H- or C- amino is present
                 for fold in free_folds:
+                    
+                    # calculates coordinate of not-connected direction
                     next_coordinate = calculate_coordinate(fold, amino.coordinate)
 
                     # checks for hydrophobe/cysteine neighbor and changes score

@@ -1,6 +1,9 @@
 
 def calculate_coordinate(fold, coordinate):
-
+    """
+    Method that takes the fold and coordinate of an amino
+    Returns the coordinate of the next coordinate following the fold
+    """
     co = list(coordinate)
     
     # adjust x-value following the fold
