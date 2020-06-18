@@ -9,7 +9,8 @@ class BestOfRandom():
         self.protein = protein
         self.iterations = iterations
         self.best_score = 1
-        self.best_protein = None    
+        self.best_protein = None
+        self.finished_folded_protein = self.protein    
 
     def run(self):
         """
