@@ -33,7 +33,7 @@ class BBProteinFolder():
             2. add nodes to list of nodes
             3. visit non visited nodes
         """
-        logging.basicConfig(filename='thomas.log',level=logging.DEBUG)
+        #logging.basicConfig(filename='thomas.log',level=logging.DEBUG)
         
         # set first coordinate to (0,0) and occupied fold to 0
         non_visited_nodes = []
@@ -49,7 +49,7 @@ class BBProteinFolder():
         # Goes through the queue of non_visited_nodes TODO
         while len(non_visited_nodes) > 0:
 
-            logging.debug(f'best_node score: {best_node.score}.')
+            #logging.debug(f'best_node score: {best_node.score}.')
             
             node = non_visited_nodes.pop()
 
@@ -82,7 +82,7 @@ class BBProteinFolder():
                 x, y = current_amino.coordinate
     
                 folds = self.get_possible_folds(protein, x, y) if node.depth > 0 else [1]
-                logging.debug(f'Possible folds: {folds}')
+                #logging.debug(f'Possible folds: {folds}')
 
              
                 if node.depth == len(self.source_protein.get_aminos()) - 1:
@@ -98,7 +98,7 @@ class BBProteinFolder():
                     # Computes new coordinate for the newly created amino after fold
                     new_x, new_y = calculate_coordinate(current_amino.fold, (x, y))
                     new_amino.set_coordinate((new_x, new_y))
-                    logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
+                    #logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
                     
                     # Copies current protein and add new amino at the end
                     new_protein = copy.deepcopy(protein)
@@ -119,7 +119,7 @@ class BBProteinFolder():
 
 
                         node.next_amino.append(new_node)
-                        logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
+                        #logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
                         
                         # Adds node to queue
                         non_visited_nodes.append(new_node)
@@ -129,7 +129,6 @@ class BBProteinFolder():
         protein = best_node.current_protein
                      
         self.finished_folded_protein = protein
-        print(f"{protein.to_string()}")
         print(f"Protein score: {calculate_score(protein)}")
         print(f"Depth = {best_node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
 
@@ -176,7 +175,7 @@ class BBProteinFolder():
             return 0
         if curr_score <= depth_avg_score and self.cointoss(50):
             return 0
-        if curr_score > depth_avg_score and self.cointoss(75):
+        if curr_score > depth_avg_score and self.cointoss(25):
             return 0
         return 1
 
