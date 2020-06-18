@@ -12,3 +12,9 @@ thomas.log
 notes_charlotte.txt
 data/output.csv
 data/proteins.txt
+data/output.csv
+charlotte_pickles/*
+charlotte_12_17_37.log
+charlotte_*.log
+data/proteins.txt
+data/output.csv
