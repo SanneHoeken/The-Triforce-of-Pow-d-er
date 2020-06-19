@@ -2,7 +2,7 @@ import csv
 import profile
 from code import visualize
 from code import Protein, Amino, Timer
-from code.algorithms import faster_random as rpf
+from code.algorithms import simulated_annealing as rpf
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
