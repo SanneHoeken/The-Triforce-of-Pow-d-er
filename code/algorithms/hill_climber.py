@@ -14,6 +14,7 @@ class HillClimber():
         self.archive = []
         self.tmp_archive = []
         self.best_score = self.protein.get_score()
+        self.finished_folded_protein = self.protein
     
 
     def run(self):
