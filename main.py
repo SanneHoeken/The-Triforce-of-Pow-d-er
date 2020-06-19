@@ -2,25 +2,40 @@ import csv
 from code import visualize
 from code import Protein, Amino, Timer
 from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing
+from code import CharlotteProteinFolder, BBProteinFolder
 
 if __name__ == "__main__":
 
     time = Timer()
 
-    protein_input = input("Protein string: ")
-    algorithm_input = input("Algorithm: ")
-    d_input = int(input("Dimensionality: "))
+    protein_input = input("Type the protein string you want to fold: ")
+    algorithm_input = int(input("""\nWhich algorithm do you want to use?
+    Type '1' for Random.
+    Type '2' for Greedy.
+    Type '3' for Hillclimber.
+    Type '4' for Simulated Annealing.
+    Type '5' for Breadth First Search ++++
+    Type '6' for Depth First Search with Branch and Bound\n"""))
+    
+    if algorithm_input in {1, 2, 3, 4}:
+        d_input = int(input("""\nIn which dimensionality do you want to fold your protein? 
+        Type '2' for 2-dimensional
+        Type '3' for 3-dimensional.\n"""))
+    else:
+        d_input = 2
 
     protein = Protein(string=protein_input, dimensionality=d_input)
 
-    """
-    RANDOM
-    """
-    if algorithm_input == "random":
-        
-        iters = int(input("Iterations: "))
+    ########
+    #RANDOM#
+    ########
 
-        print("Running algorithm ...")
+    if algorithm_input == 1:
+        
+        iters = int(input("""\nHow many iterations do you want the Random algorithm to run?
+        Type the amount.\n"""))
+
+        print("\nRunning Random algorithm ...\n")
 
         time.start() 
 
@@ -29,14 +44,16 @@ if __name__ == "__main__":
 
         time.stop() 
 
-    """
-    GREEDY
-    """
-    if algorithm_input == "greedy":
-        
-        iters = int(input("Iterations: "))
+    ########
+    #GREEDY#
+    ########
 
-        print("Running algorithm ...")
+    elif algorithm_input == 2:
+        
+        iters = int(input("""\nHow many iterations do you want the Greedy algorithm to run?
+        Type the amount.\n"""))
+
+        print("\nRunning Greedy algorithm ...\n")
 
         time.start() 
 
@@ -45,83 +62,156 @@ if __name__ == "__main__":
 
         time.stop() 
 
-    """
-    HILL CLIMBER
-    """
+    ##############
+    #HILL CLIMBER#
+    ##############
 
-    if algorithm_input == "hillclimber":
+    elif algorithm_input == 3:
 
+        starting = int(input("""\nFor the Hillclimber algorithm, a starting state is required. 
+        How do you want to generate a starting protein configuration?
+        Type '1' for Random.
+        Type '2' for Greedy.\n"""))
 
-        print("Generating starting state ...")
+        if starting == 1:
+
+            starting_iters = int(input("""\nHow many iterations do you want the Random algorithm to run?
+            Type the amount.\n"""))
+            
+            print("\nGenerating starting state ...\n")
+
+            starting_folder = BestOfRandom(protein, iterations=starting_iters)
+            starting_folder.run()
+
+        if starting == 2:
+
+            starting_iters = int(input("""\nHow many iterations do you want the Greedy algorithm to run?
+            Type the amount.\n"""))
+            
+            print("\nGenerating starting state ...\n")
+
+            starting_folder = BestGreedy(protein, iterations=starting_iters)
+            starting_folder.run()
+
+        print(f"Score of starting state is: {starting_folder.protein.get_score()}\n")
         
-        greedy_folder = BestGreedy(protein, iterations=500)
-        greedy_folder.run()
+        iters = int(input("""How many iterations do you want the Hillclimber algorithm to run?
+        Type the amount.\n"""))
+        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration?
+        Type the amount.\n"""))
 
-        print("Starting state is best out of 500 greedy folded proteins.")
-        print(f"Score of starting state is: {greedy_folder.protein.get_score()}")
-        
-        iters = int(input("Iterations for Hillclimber: "))
-        muts = int(input("Mutations per iteration: "))
-
-        print("Running algorithm ...")
+        print("\nRunning Hillclimber algorithm ...\n")
 
         time.start() 
 
-        folder = HillClimber(greedy_folder.protein, iterations=iters, mutations_per_iteration=muts)
+        folder = HillClimber(starting_folder.protein, iterations=iters, mutations_per_iteration=muts)
         folder.run()
 
         time.stop() 
 
 
-    """
-    SIMULATED ANNEALING
-    """
+    #####################
+    #SIMULATED ANNEALING#
+    #####################
 
-    if algorithm_input == "simulated annealing":
+    elif algorithm_input == 4:
 
-        print("Generating starting state ...")
+        starting = int(input("""\nFor the Simulated Annealing algorithm, a starting state is required. 
+        How do you want to generate a starting protein configuration?
+        Type '1' for Random.
+        Type '2' for Greedy.\n"""))
+
+        if starting == 1:
+
+            starting_iters = int(input("""\nHow many iterations do you want the Random algorithm to run?
+            Type the amount.\n"""))
+            
+            print("\nGenerating starting state ...\n")
+
+            starting_folder = BestOfRandom(protein, iterations=starting_iters)
+            starting_folder.run()
+
+        if starting == 2:
+
+            starting_iters = int(input("""\nHow many iterations do you want the Greedy algorithm to run?
+            Type the amount.\n"""))
+            
+            print("\nGenerating starting state ...\n")
+
+            starting_folder = BestGreedy(protein, iterations=starting_iters)
+            starting_folder.run()
+
+        print(f"Score of starting state is: {starting_folder.protein.get_score()}\n")
         
-        greedy_folder = BestGreedy(protein, iterations=500)
-        greedy_folder.run()
+        iters = int(input("""How many iterations do you want the Simulated Annealing algorithm to run?
+        Type the amount.\n"""))
+        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration?
+        Type the amount.\n"""))
+        temp = float(input("""\nWhat starting temperature do you want the algorithm to use?
+        Type the amount of degrees.\n"""))
 
-        print("Starting state is best out of 500 greedy folded proteins.")
-        print(f"Score of starting state is: {greedy_folder.protein.get_score()}")
-
-        iters = int(input("Iterations for Simulated Annealing: "))
-        muts = int(input("Mutations per iteration: "))
-        temp = float(input("Temperature: "))
-
-        print("Running algorithm ...")
+        print("\nRunning Simulated Annealing algorithm ...\n")
 
         time.start() 
 
-        folder = SimulatedAnnealing(greedy_folder.protein, iterations=iters, mutations_per_iteration=muts, temperature=temp)
+        folder = SimulatedAnnealing(starting_folder.protein, iterations=iters, mutations_per_iteration=muts, temperature=temp)
         folder.run()
 
         time.stop() 
 
+    ###########################
+    #BREADTH FIRST SEARCH ++++#
+    ###########################
 
-    """
-    RESULTS
-    """
+    elif algorithm_input == 5:
+
+        print("\nRunning Breadth First Search ++++ algorithm ...\n")
+
+        time.start() 
+
+        folder = CharlotteProteinFolder(protein)
+        folder.fold()
+        folder.set_score()
+
+        time.stop() 
+
+    ##########################################
+    #DEPTH FIRST SEARCH WITH BRANCH AND BOUND#
+    ##########################################
+
+    elif algorithm_input == 6:
+
+        print("\nRunning Depth First Search with Branch and Bound algorithm ...\n")
+
+        time.start() 
+
+        folder = BBProteinFolder(protein)
+        folder.fold()
+        folder.set_score()
+
+        time.stop() 
+
+    #########
+    #RESULTS#
+    #########
     
-    print(f"Time: {time.get_time()} seconds")
+    print(f"Runtime: {time.get_time()} seconds")
 
     # print protein score
-    if folder.protein.get_score():
-        print(f"Score: {folder.protein.get_score()}")
+    if folder.finished_folded_protein.get_score():
+        print(f"Score: {folder.finished_folded_protein.get_score()}")
 
     # write protein output to csv-file
-    path = input("Path to csv output file: ")
+    path = input("""\nType the path to a csv output file. For example: 'data/output.csv'\n""")
 
     with open(path, 'w') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['amino', 'fold'])
-        for amino in protein.get_aminos():
+        for amino in folder.finished_folded_protein.get_aminos():
             csv_writer.writerow([f'{amino.type}', f'{amino.fold}'])
-        csv_writer.writerow(['score', f'{protein.get_score()}'])
+        csv_writer.writerow(['score', f'{folder.finished_folded_protein.get_score()}'])
 
-    print("Wrote output file. Plotting protein ...")
+    print("\nWrote output file. Plotting protein ...")
 
     # plot protein
-    visualize.visualize_protein(folder.protein)
+    visualize.visualize_protein(folder.finished_folded_protein)
