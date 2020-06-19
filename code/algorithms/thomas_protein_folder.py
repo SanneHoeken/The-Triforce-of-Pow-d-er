@@ -1,6 +1,9 @@
 import copy
 import logging
 import random
+from datetime import datetime
+import cProfile, pstats, io
+import profile
 
 from code.classes.amino import Amino
 from code.classes.protein import Protein
@@ -33,7 +36,9 @@ class BBProteinFolder():
             2. add nodes to list of nodes
             3. visit non visited nodes
         """
-        #logging.basicConfig(filename='thomas.log',level=logging.DEBUG)
+        now = datetime.now()
+        current_time = now.strftime("%d%m_%H%M%S")
+        logging.basicConfig(filename="thomas_" + current_time + ".log",level=logging.DEBUG)
         
         # set first coordinate to (0,0) and occupied fold to 0
         non_visited_nodes = []
@@ -49,7 +54,7 @@ class BBProteinFolder():
         # Goes through the queue of non_visited_nodes TODO
         while len(non_visited_nodes) > 0:
 
-            #logging.debug(f'best_node score: {best_node.score}.')
+            logging.debug(f'best_node score: {best_node.score}.')
             
             node = non_visited_nodes.pop()
 
@@ -185,3 +190,8 @@ class BBProteinFolder():
         if random_value < threshold:
             return 1
         return 0
+
+    
+
+
+

@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     # fold protein with algorithm
     folder = prt_folder.BBProteinFolder(protein)
-    # profile.run('folder.fold()')
+    #profile.run('folder.fold()')
     folder.fold()
     folder.set_score()
     
