@@ -10,12 +10,13 @@ class Amino():
 
     def set_fold(self, fold):
         """
-        1   = positieve stap in de eerste dimensie (X-as richting)
-        -1  = negatieve stap in de eerste dimensie (X-as richting)
-        2   = positieve stap in de tweede dimensie (Y-as richting)
-        -2  = negatieve stap in de tweede dimensie (Y-as richting)
-        3   = positieve stap in de derde dimensie (Z-as richting)
-        -3  = negatieve stap in de derde dimensie (Z-as richting)
+        Meaning of the fold:
+        1   = positive step in the first dimension (X-axis direction)
+        -1  = negative step in the first dimension (X-axis direction)
+        2   = positive step in the second dimension (Y-axis direction)
+        -2  = negative step in the second dimension (Y-axis direction)
+        3   = positive step in the third dimension (Z-axis direction)
+        -3  = negative step in the third dimension (Z-axis direction)
         """
         self.fold = fold
 
@@ -30,6 +31,9 @@ class Amino():
         self.coordinate = coordinate
     
     def reset_amino(self):
+        """
+        Sets the fold, coordinate and previous amino values to None
+        """
         self.fold = None
         self.coordinate = None
         self.previous_amino = None
