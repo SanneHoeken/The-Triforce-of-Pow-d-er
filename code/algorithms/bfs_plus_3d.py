@@ -8,7 +8,7 @@ from code.algorithms.help_methods.calculate_score import calculate_score
 from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 from code.classes.protein_tree import ProteinTree
 
-class CharlotteProteinFolder3D():
+class BFSPlus3D():
 
     def __init__(self, protein):
         """

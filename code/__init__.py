@@ -8,5 +8,5 @@ from code.algorithms.greedy import BestGreedy
 from code.algorithms.random import BestOfRandom
 from code.algorithms.hill_climber import HillClimber
 from code.algorithms.simulated_annealing import SimulatedAnnealing
-from code.algorithms.charlotte_protein_folder import CharlotteProteinFolder
+from code.algorithms.bfs_plus import BFSPlus
 from code.algorithms.thomas_protein_folder import BBProteinFolder

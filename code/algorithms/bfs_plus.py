@@ -8,7 +8,7 @@ from code.algorithms.help_methods.calculate_score import calculate_score
 from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 from code.classes.protein_tree import ProteinTree
 
-class CharlotteProteinFolder():
+class BFSPlus():
 
     def __init__(self, protein, pruning_depth = 8, pruning_distance_factor = 4, max_queue_size = 2000):
         """

@@ -2,7 +2,7 @@ import csv
 from code import visualize
 from code import Protein, Amino, Timer
 from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing
-from code import CharlotteProteinFolder, BBProteinFolder
+from code import BFSPlus, BBProteinFolder
 
 if __name__ == "__main__":
 
@@ -179,9 +179,9 @@ if __name__ == "__main__":
         time.start() 
 
         if default == 2:
-            folder = CharlotteProteinFolder(protein, pruning_depth, pruning_distance, queue_size)
+            folder = BFSPlus(protein, pruning_depth, pruning_distance, queue_size)
         else:
-            folder = CharlotteProteinFolder(protein)
+            folder = BFSPlus(protein)
 
         folder.fold()
         folder.set_score()
