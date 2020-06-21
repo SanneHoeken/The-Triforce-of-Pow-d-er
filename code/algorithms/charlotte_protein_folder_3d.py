@@ -19,13 +19,13 @@ class CharlotteProteinFolder3D():
         first_protein = Protein(string=protein.get_aminos()[0].type, dimensionality=3)
         first_protein.aminos[0].set_coordinate((0, 0, 0))
         self.first_node = ProteinTree(first_protein)
-        self.pruning_depth = 8 #round(len(protein.get_aminos()) / 2)
+        self.pruning_depth = 4 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
         self.relevance_score_heur = "best_node.score + (self.source_protein.source_string.count('P') * 8/len(self.source_protein.source_string))"
         self.pruning_distance = 0
-        self.pruning_distance_heur = "node.depth * 8"
+        self.pruning_distance_heur = "node.depth * 4"
         self.node_count = 0
-        self.max_queue_size = 4000
+        self.max_queue_size = 50000
 
     def fold(self, fold_position = 0):
         """
@@ -46,7 +46,7 @@ class CharlotteProteinFolder3D():
         non_visited_nodes = []
         non_visited_nodes.append(self.first_node)
         visited_nodes = []
-        good_but_pruned = []
+        good_but_pruned = [] #[[None for x in range(1000)] for y in range(len(self.source_protein.aminos)* 5)]
         best_node = self.first_node
         
         # Goes through the queue of non_visited_nodes
@@ -103,7 +103,7 @@ class CharlotteProteinFolder3D():
                             self.node_count = self.node_count + 1
                             node.next_amino.append(new_node)
                                 
-                            if (len(non_visited_nodes) < self.max_queue_size) and (len(non_visited_nodes) == 0 or self.node_count >= (non_visited_nodes[-1].id + (node.depth * 6))):
+                            if (len(non_visited_nodes) < self.max_queue_size) and (len(non_visited_nodes) == 0 or self.node_count >= (non_visited_nodes[-1].id + (node.depth * 4))):
                                 logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
                                 
                                 # Adds node to queue
@@ -112,31 +112,54 @@ class CharlotteProteinFolder3D():
                                 # If score has improved, update best node
                                 # !! To do: what if after pruning, the best node ends up leading to an impossible protein?
                                 # -> Keep track of "best nodes"? Go back in tree?
-                                if new_node.score < best_node.score or (new_node.score == best_node.score and new_node.depth == len(self.source_protein.aminos)):
+                                if (
+                                    new_node.score < best_node.score or
+                                    (new_node.score <= best_node.score and new_node.depth == len(self.source_protein.aminos)) #or
+                                    #(new_node.score <= best_node.score and new_node.parent == best_node)
+                                    ):
                                     best_node = new_node
 
                                     if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                        self.relevance_score = best_node.score + (self.source_protein.source_string.count('P') * 4/len(self.source_protein.source_string))
+                                        self.relevance_score = best_node.score + (self.source_protein.source_string[0:node.depth].count('P') * 6/len(self.source_protein.source_string))
                                         #good_but_pruned.clear()
                                     logging.debug(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
                                     logging.debug(f"Current protein = {new_protein.to_string_with_coord()}")
                             else:
-                                if len(good_but_pruned) < self.max_queue_size:
+                                if len(good_but_pruned) < 4000:
                                     good_but_pruned.append(new_node)
                                 # elif len(good_but_pruned) == self.max_queue_size:
                                 #     good_but_pruned.pop(0)
                                 #     good_but_pruned.append(new_node)
-                                logging.debug(f"Added node to good_but_pruned, current size = { len(good_but_pruned) }")
-            else:
-                logging.debug(f'Node depth is { node.depth }, this is too high: skip.')
+                                    logging.debug(f"Added node to good_but_pruned (depth = { new_node.depth }, score = {new_node.score}), current size = { len(good_but_pruned) }")
+            
+            elif node.depth == (len(self.source_protein.aminos) - 1) and node.score == best_node.score:
+                best_node = node
+                logging.debug(f'Node depth is { node.depth }, finishing up.')
+                protein = node.current_protein
+                    
+                self.finished_folded_protein = protein
+                print(f"Depth = {node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
+
+                break
+
 
             # Updates queue and archive
             visited_nodes.append(node)
 
-            if len(non_visited_nodes) == 0 and best_node.depth <= len(self.source_protein.aminos) and len(good_but_pruned) > 0:
-                non_visited_nodes.append(good_but_pruned.pop())
-                logging.debug("Taking node from good_but_pruned")
-            else: 
+            if len(non_visited_nodes) == 0 and best_node.depth <= len(self.source_protein.aminos):
+                if len(good_but_pruned) > 0:
+                    retrieved_node = good_but_pruned.pop()
+                    non_visited_nodes.append(retrieved_node)
+                    logging.debug(f"Taking node from good_but_pruned: node with depth = { retrieved_node.depth }, score = { retrieved_node.score }")
+                    best_node = retrieved_node
+                else:
+                    logging.debug(f"good_but_pruned is empty.")
+            
+            if (best_node.depth == len(self.source_protein.aminos) - 1 or
+                node.depth == len(self.source_protein.aminos) - 1 and node.parent == best_node):
+                logging.debug(f"BREAK! (Best node depth = {best_node.depth}, current depth = {node.depth}, parent is best node = {(node.parent == best_node)}")
+                break 
+
                 logging.debug(f"Non visited nodes size = { len(non_visited_nodes) }, best_node depth = { best_node.depth } (score = { best_node.score }), current depth = { node.depth }, origin size = { len(self.source_protein.aminos) }")
         
         # Picks best node

@@ -17,7 +17,7 @@ class CharlotteProteinFolder():
         self.source_protein = protein
         self.finished_folded_protein = None
         first_protein = Protein(string=protein.get_aminos()[0].type)
-        first_protein.aminos[0].set_coordinate((0, 0))
+        first_protein.aminos[0].set_coordinate((0, 0)) 
         self.first_node = ProteinTree(first_protein)
         self.pruning_depth = 8 #round(len(protein.get_aminos()) / 2)
         self.relevance_score = 0
@@ -25,7 +25,7 @@ class CharlotteProteinFolder():
         self.pruning_distance = 0
         self.pruning_distance_heur = "node.depth * 4"
         self.node_count = 0
-        self.max_queue_size =2000
+        self.max_queue_size = 2000
 
     def fold(self, fold_position = 0):
         """
