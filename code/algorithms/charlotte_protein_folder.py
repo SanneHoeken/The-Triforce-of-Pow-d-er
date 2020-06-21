@@ -25,7 +25,7 @@ class CharlotteProteinFolder():
         self.pruning_distance = 0
         self.pruning_distance_heur = "node.depth * 4"
         self.node_count = 0
-        self.max_queue_size = 2000
+        self.max_queue_size =2000
 
     def fold(self, fold_position = 0):
         """
@@ -117,7 +117,7 @@ class CharlotteProteinFolder():
                                 best_node = new_node
 
                                 if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                    self.relevance_score = best_node.score + (self.source_protein.source_string.count('P') * 4/len(self.source_protein.source_string))
+                                    self.relevance_score = best_node.score + 1 + (self.source_protein.source_string.count('P') * 4/len(self.source_protein.source_string))
                                     #good_but_pruned.clear()
                                 #logging.debug(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
                                 #logging.debug(f"Current protein = {new_protein.to_string_with_coord()}")

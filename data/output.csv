@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 amino,fold
 H,3
 C,1
@@ -50,3 +51,21 @@ P,2
 H,-3
 H,None
 score,-37
+=======
+amino,fold
+H,1
+H,-2
+P,1
+H,2
+H,1
+H,2
+P,-1
+H,2
+P,-1
+H,-2
+H,-1
+H,-1
+P,-2
+H,None
+score,-6
+>>>>>>> 3ae8ed5e0376ad389e50cb0e960b3d424316f6a2
