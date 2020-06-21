@@ -1,7 +1,7 @@
 # Triforce of Pow(d)er
 
-Dit project valt onder het vak Programmeertheorie dat onderdeel is van de minor Programmeren aan de Universiteit van Amsterdam .
-Juni 2020
+Dit project valt onder het vak Programmeertheorie dat onderdeel is van de minor Programmeren aan de Universiteit van Amsterdam.
+Juni 2020.
 
 ### Case: Protein Pow(d)er
 

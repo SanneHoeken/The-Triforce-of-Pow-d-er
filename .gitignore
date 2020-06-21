@@ -16,5 +16,6 @@ data/output.csv
 charlotte_pickles/*
 charlotte_12_17_37.log
 charlotte_*.log
+thomas_*.log
 data/proteins.txt
 data/output.csv

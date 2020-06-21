@@ -20,7 +20,7 @@ class BBProteinFolder():
         self.source_protein = protein
         self.finished_folded_protein = None
         first_protein = Protein(string=protein.get_aminos()[0].type)
-        first_protein.aminos[0].set_coordinate((0, 0))
+        first_protein.aminos[0].set_coordinate((0, 0, 0))
         self.first_node = ProteinTree(first_protein)
         self.total_depth = round(len(protein.get_aminos()))
         self.best_score = 0
@@ -70,11 +70,11 @@ class BBProteinFolder():
             if current_amino is not None: 
                 
                 if node.depth == 0:
-                    current_amino.set_coordinate((0, 0))
+                    current_amino.set_coordinate((0, 0, 0))
                 
-                x, y = current_amino.coordinate
+                x, y, z = current_amino.coordinate
     
-                folds = self.get_possible_folds(protein, x, y) if node.depth > 0 else [1]
+                folds = self.get_possible_folds(protein, x, y, z) if node.depth > 0 else [1]
                 #logging.debug(f'Possible folds: {folds}')
 
              
@@ -84,15 +84,15 @@ class BBProteinFolder():
                 
                 # Goes through all possible folds from current protein
                 for fold in folds:
-                    
+
                     new_amino = Amino(node.depth + 1, self.source_protein.get_aminos()[node.depth + 1].type)
                     current_amino.set_fold(fold)
                     new_amino.previous_amino = 0 - fold
 
                     # Computes new coordinate for the newly created amino after fold
-                    new_x, new_y = calculate_coordinate(current_amino.fold, (x, y))
-                    new_amino.set_coordinate((new_x, new_y))
-                    #logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
+                    new_x, new_y, new_z = calculate_coordinate(current_amino.fold, (x, y, z))
+                    new_amino.set_coordinate((new_x, new_y, new_z))
+                    #logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y, new_z}')
                     
                     # Copies current protein and add new amino at the end
                     new_protein = copy.deepcopy(protein)
@@ -131,23 +131,23 @@ class BBProteinFolder():
                         non_visited_nodes.append(new_node)
 
         # Picks best node
-        #print(best_node.score)
         protein = best_node.current_protein
+        protein.D = 3
                      
         self.finished_folded_protein = protein
         print(f"Protein score: {calculate_score(protein)}")
         print(f"Depth = {best_node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
 
 
-    def get_possible_folds(self, protein, x, y):  
+    def get_possible_folds(self, protein, x, y, z):  
         """
         Returns list of possible folds.
-        Arguments: protein, x, y.
+        Arguments: protein, x, y, z.
         """  
         possible_folds = []
         
         # dict with all neighbouring coordinates 
-        coordinates = {1: (x+1, y), -1: (x-1, y), 2:(x, y+1), -2: (x, y-1)} 
+        coordinates = {1: (x+1, y, z), -1: (x-1, y, z), 2:(x, y+1, z), -2: (x, y-1, z), 3: (x, y, z+1), -3: (x, y, z-1)} 
 
         # add possible folds to list
         for key, value in coordinates.items(): 
@@ -179,9 +179,9 @@ class BBProteinFolder():
             return 0 
         if curr_score <= depth_best_score: 
             return 0
-        if curr_score <= depth_avg_score and self.cointoss(2):
+        if curr_score <= depth_avg_score and self.cointoss(0):
             return 0
-        if curr_score > depth_avg_score and self.cointoss(1):
+        if curr_score > depth_avg_score and self.cointoss(0):
             return 0
         return 1
 
@@ -191,3 +191,8 @@ class BBProteinFolder():
         if random_value < threshold:
             return 1
         return 0
+
+    
+
+
+
