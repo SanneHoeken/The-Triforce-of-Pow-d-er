@@ -97,7 +97,7 @@ if __name__ == "__main__":
         
         iters = int(input("""How many iterations do you want the Hillclimber algorithm to run?
         Type the amount.\n"""))
-        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration?
+        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Recommendation = 4)
         Type the amount.\n"""))
 
         print("\nRunning Hillclimber algorithm ...\n")
@@ -145,9 +145,9 @@ if __name__ == "__main__":
         
         iters = int(input("""How many iterations do you want the Simulated Annealing algorithm to run?
         Type the amount.\n"""))
-        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration?
+        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Recommendation = 4)
         Type the amount.\n"""))
-        temp = float(input("""\nWhat starting temperature do you want the algorithm to use?
+        temp = float(input("""\nWhat starting temperature do you want the algorithm to use? (Recommendation = 2)
         Type the amount of degrees.\n"""))
 
         print("\nRunning Simulated Annealing algorithm ...\n")
