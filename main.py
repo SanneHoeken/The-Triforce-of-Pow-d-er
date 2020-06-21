@@ -165,15 +165,24 @@ if __name__ == "__main__":
 
     elif algorithm_input == 5:
 
-        pruning_depth = int(input("""\nFrom what depth do you want to start pruning? (Suggested: 8)\n"""))
-        pruning_distance = int(input("""\nWhat is the value of the pruning distance factor? (Suggested: 4)\n"""))
-        queue_size = int(input("""\nWhat maximal size for the queue? (Suggested: 2000)\n"""))
+        default = int(input("""\nDo you want to use default parameters or advanced parameters?
+        Type 1 for default.
+        Type 2 for advanced.\n"""))
+
+        if default == 2:
+            pruning_depth = int(input("""\nFrom what depth do you want to start pruning? (Suggested: 8)\n"""))
+            pruning_distance = int(input("""\nWhat is the value of the pruning distance factor? (Suggested: 4)\n"""))
+            queue_size = int(input("""\nWhat maximal size for the queue? (Suggested: 2000)\n"""))
 
         print("\nRunning Breadth First Search ++++ algorithm ...\n")
 
         time.start() 
 
-        folder = CharlotteProteinFolder(protein, pruning_depth, pruning_distance, queue_size)
+        if default == 2:
+            folder = CharlotteProteinFolder(protein, pruning_depth, pruning_distance, queue_size)
+        else:
+            folder = CharlotteProteinFolder(protein)
+
         folder.fold()
         folder.set_score()
 
