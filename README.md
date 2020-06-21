@@ -46,19 +46,19 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
   - **/code/visualisation**: bevat de code voor de visualisatie
 - **/data**: bevat een tekstbestand met eiwit-strings die als input zijn te gebruiken
 
-### Algoritmes
+## Algoritmes
 
-1. Random
+1. **Random.**
   Het Random algoritme vouwt voor elke iteratie een eiwit door willekeurige mogelijke vouwwaarden één voor één toe te wijzen aan elk aminozuur. Als een aminozuur eindigt in een doodlopende ruimte en het eiwit niet verder gevouwen kan worden begint de eiwitvouwing helemaal opnieuw. De meest stabiel gevouwen configuratie wordt steeds bewaard. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/random.py) de code voor implementatiedetails.
-2. Greedy
+2. **Greedy.**
   Het Greedy algoritme vouwt voor elke iteratie een eiwit door aan elk aminozuur één voor één vouwwaarden toe te wijzen die op dat punt de meest stabiele geldige configuratie oplevert. Als een aminozuur eindigt in een doodlopende ruimte en het eiwit niet verder gevouwen kan worden begint de eiwitvouwing helemaal opnieuw. De meest stabiel gevouwen eindconfiguratie wordt steeds bewaard. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/greedy.py) de code voor implementatiedetails.
-3. Hillclimber
+3. **Hillclimber.**
   Het Hillclimber algoritme neemt een reeds gevouwen eiwit als uitgangspunt en muteert het eiwit een x aantal keer door voor y willekeurige amino's de vouwwaarden te veranderen naar willekeurig gekozen andere waarden. Elke mutatie(serie) die tot een stabielere geldige configuratie leidt wordt bewaard. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/hill_climber.py) de code voor implementatiedetails.
-4. Simulated Annealing
+4. **Simulated Annealing.**
   Het Simulated Annealing algoritme neemt een reeds gevouwen eiwit als uitgangspunt en muteert het eiwit een x aantal keer door voor y willekeurige amino's de vouwwaarden te veranderen naar willekeurig gekozen andere waarden. Elke mutatie(serie) die tot een stabielere geldige configuratie leidt wordt bewaard. Het Simulated Annealing algoritme accepteert soms ook gemuteerde configuraties die minder stabiel zijn, afhankelijk van de temperatuur die ingesteld is. De temperatuur koelt met aantal iteraties lineair af. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/simulated_annealing.py) de code voor implementatiedetails.
-5. Breadth First Search ++++
+5. **Breadth First Search ++++.**
   Hier informatie over het algoritme. Bekijk [hier](link naar de code) code voor implementatiedetails.
-6. Depth First Search met Branch & Bound
+6. **Depth First Search met Branch & Bound.**
   Hier informatie over het algoritme. Bekijk [hier](link naar de code) de code voor implementatiedetails.
 
 ## Auteurs
