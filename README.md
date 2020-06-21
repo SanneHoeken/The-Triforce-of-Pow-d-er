@@ -59,11 +59,10 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
 5. **Breadth First Search ++++.**
   Het Breadth First Search algoritme bouwt een boom van de verschillende mogelijkheden om het eiwit te vouwen en doorzoekt deze boom tegelijkertijd in de breedte totdat het de beste vouwmogelijkheid heeft gevonden.
   Een totale opbouw en doorzoek van de boom zou veel te veel geheugen en tijd nemen, dus dit algoritme is verbeterd met verschillende soorten pruning:
-  * Queue restriction: om te voorkomen dat er te veel onnodige mogelijkheden worden bewaard, kan de gebruiker de queue van nodes beperken tot een bepaalde lengte. Dit zal BFS dwingen om slechts een bepaald aantal nodes per rij te behouden en moet dus verstandig worden gebalanceerd met de andere pruningen, om te voorkomen dat slechts een klein deel van de takken aan de linkerkant van de boom wordt gebruikt.
-  * Pruning op relevantie: voor elke mogelijkheid van vouwing wordt een relevantie-score berekend (op basis van de diepte van de node, de huidige score van de aminozuurketen en de structuur van het eiwit op dat punt in de boom). Nodes onder deze score worden gepruned.
-  * Pruning op diepte: met een diepteparameter kan de gebruiker een diepte selecteren waaruit nodes op breedte worden gepruned:
-  * Pruning op breedte: de gebruiker kan een afstandsfactor geven om meer nodes in de breedte te prunen (om te voorkomen dat er te veel nodes zijn met een vergelijkbare structuur en dezelfde score). Per diepte wordt er slechts één node bewaard iedere diepte * afstandsfactor node. 
-
+    * Queue restriction: om te voorkomen dat er te veel onnodige mogelijkheden worden bewaard, kan de gebruiker de queue van nodes beperken tot een bepaalde lengte. Dit zal BFS dwingen om slechts een bepaald aantal nodes per rij te behouden en moet dus verstandig worden gebalanceerd met de andere pruningen, om te voorkomen dat slechts een klein deel van de takken aan de linkerkant van de boom wordt gebruikt.
+    * Pruning op relevantie: voor elke mogelijkheid van vouwing wordt een relevantie-score berekend (op basis van de diepte van de node, de huidige score van de aminozuurketen en de structuur van het eiwit op dat punt in de boom). Nodes onder deze score worden gepruned.
+    * Pruning op diepte: met een diepteparameter kan de gebruiker een diepte selecteren waaruit nodes op breedte worden gepruned:
+    * Pruning op breedte: de gebruiker kan een afstandsfactor geven om meer nodes in de breedte te prunen (om te voorkomen dat er te veel nodes zijn met een vergelijkbare structuur en dezelfde score). Per diepte wordt er slechts één node bewaard iedere diepte * afstandsfactor node. 
   Met gebruik en goed balanceren van deze parameters kan het algoritme snel de relevante vouwingen selecteren en een eiwit met een hoge score opbouwen. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/bfs_plus.py) code voor implementatiedetails.
 6. **Depth First Search met Branch & Bound.**
   Hier informatie over het algoritme. Bekijk [hier](link naar de code) de code voor implementatiedetails.
