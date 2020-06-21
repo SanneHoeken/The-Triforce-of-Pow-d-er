@@ -35,7 +35,7 @@ class BFSPlus():
 
         Pruning by relevance starts from the beginning (relevance is calculated internally based on best node and depth)
         Other prunings start at pruning depth.
-            - Pruning distance factor is used prune nodes at every depth of the tree: only nodes every depth * pruning_distance_factor are kept.
+            - Pruning distance factor is used to prune nodes at every depth of the tree: only nodes every depth * pruning_distance_factor are kept.
 
         Max queue size allows only a certain a mount of nodes to be stored (and processed).
             - If max queue size is too small: nodes on the right of the tree will never be used (can't be stored in the queue).
