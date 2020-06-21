@@ -97,7 +97,7 @@ if __name__ == "__main__":
         
         iters = int(input("""How many iterations do you want the Hillclimber algorithm to run?
         Type the amount.\n"""))
-        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Recommendation = 4)
+        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Suggested: 4)
         Type the amount.\n"""))
 
         print("\nRunning Hillclimber algorithm ...\n")
@@ -145,9 +145,9 @@ if __name__ == "__main__":
         
         iters = int(input("""How many iterations do you want the Simulated Annealing algorithm to run?
         Type the amount.\n"""))
-        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Recommendation = 4)
+        muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Suggested: 4)
         Type the amount.\n"""))
-        temp = float(input("""\nWhat starting temperature do you want the algorithm to use? (Recommendation = 2)
+        temp = float(input("""\nWhat starting temperature do you want the algorithm to use? (Suggested: 2)
         Type the amount of degrees.\n"""))
 
         print("\nRunning Simulated Annealing algorithm ...\n")
@@ -165,11 +165,24 @@ if __name__ == "__main__":
 
     elif algorithm_input == 5:
 
+        default = int(input("""\nDo you want to use default parameters or advanced parameters?
+        Type '1' for default.
+        Type '2' for advanced.\n"""))
+
+        if default == 2:
+            pruning_depth = int(input("""\nFrom what depth do you want to start pruning? (Suggested: 8)\n"""))
+            pruning_distance = int(input("""\nWhat is the value of the pruning distance factor? (Suggested: 4)\n"""))
+            queue_size = int(input("""\nWhat maximal size for the queue? (Suggested: 2000)\n"""))
+
         print("\nRunning Breadth First Search ++++ algorithm ...\n")
 
         time.start() 
 
-        folder = CharlotteProteinFolder(protein)
+        if default == 2:
+            folder = CharlotteProteinFolder(protein, pruning_depth, pruning_distance, queue_size)
+        else:
+            folder = CharlotteProteinFolder(protein)
+
         folder.fold()
         folder.set_score()
 

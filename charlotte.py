@@ -3,7 +3,7 @@ import profile
 
 from code.visualisations import visualize
 from code.classes import protein as prt, amino, timer
-from code.algorithms import charlotte_protein_folder_3d as prt_folder
+from code.algorithms import charlotte_protein_folder as prt_folder
 from code.algorithms.help_methods.pickling import *
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     time.start()
 
     # fold protein with algorithm
-    folder = prt_folder.CharlotteProteinFolder3D(protein)
+    folder = prt_folder.CharlotteProteinFolder(protein)
     # profile.run('folder.fold()')
     folder.fold()
     folder.set_score()
@@ -26,18 +26,18 @@ if __name__ == "__main__":
     print(f"Time: {time.get_time()} seconds")
 
     # Pickling
-    pickled = {}
-    pickled['protein'] = protein.source_string
-    pickled['folder'] = folder
-    pickled['pruning_depth'] = folder.pruning_depth
-    pickled['pruning_distance_heur'] = folder.pruning_distance_heur
-    pickled['relevance_score_heur'] = folder.relevance_score_heur
-    pickled['max_queue_size'] = folder.max_queue_size
-    pickled['score'] = folder.finished_folded_protein.get_score()
-    pickled['time'] = time.get_time()
-    saved_file = store_pickle("charlotte_pickles", pickled)
+    # pickled = {}
+    # pickled['protein'] = protein.source_string
+    # pickled['folder'] = folder
+    # pickled['pruning_depth'] = folder.pruning_depth
+    # pickled['pruning_distance_heur'] = folder.pruning_distance_heur
+    # pickled['relevance_score_heur'] = folder.relevance_score_heur
+    # pickled['max_queue_size'] = folder.max_queue_size
+    # pickled['score'] = folder.finished_folded_protein.get_score()
+    # pickled['time'] = time.get_time()
+    # saved_file = store_pickle("charlotte_pickles", pickled)
     
-    show_pickle(saved_file)
+    # show_pickle(saved_file)
 
     # write protein output to csv-file 
     with open('data/output.csv', 'w') as csvfile:
