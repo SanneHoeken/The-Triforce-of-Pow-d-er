@@ -111,6 +111,7 @@ class BFSPlus():
                             if new_node.score < best_node.score or (new_node.score == best_node.score and new_node.depth == protein_size):
                                 best_node = new_node
 
+                                # Calculates new relevance score (this heuristic doesn't come from anywhere else and was invented by the student who wrote this code - it can probably be improved)
                                 if best_node.depth > 0 and node.depth >= self.pruning_depth:
                                     self.relevance_score = best_node.score + 1 + (self.source_protein.source_string.count('P') * 4/protein_size)
                                     

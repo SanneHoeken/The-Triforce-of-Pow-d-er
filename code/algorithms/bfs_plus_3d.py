@@ -10,7 +10,7 @@ from code.classes.protein_tree import ProteinTree
 
 class BFSPlus3D():
 
-    def __init__(self, protein):
+    def __init__(self, protein, pruning_depth = 4, pruning_distance_factor = 4, max_queue_size = 100000, max_savestack_size = 4000):
         """
         Takes a Protein object as argument.
         """
@@ -19,13 +19,14 @@ class BFSPlus3D():
         first_protein = Protein(string=protein.get_aminos()[0].type, dimensionality=3)
         first_protein.aminos[0].set_coordinate((0, 0, 0))
         self.first_node = ProteinTree(first_protein)
-        self.pruning_depth = 4 #round(len(protein.get_aminos()) / 2)
+        self.pruning_depth = pruning_depth
+        self.pruning_distance_factor = pruning_distance_factor
+        self.max_queue_size = max_queue_size
+        self.max_savestack_size = max_savestack_size
         self.relevance_score = 0
-        self.relevance_score_heur = "best_node.score + (self.source_protein.source_string.count('P') * 8/len(self.source_protein.source_string))"
-        self.pruning_distance = 0
-        self.pruning_distance_heur = "node.depth * 4"
         self.node_count = 0
-        self.max_queue_size = 100000
+        
+
 
     def fold(self, fold_position = 0):
         """
@@ -35,17 +36,21 @@ class BFSPlus3D():
             2. add nodes to list of nodes
             3. visit non visited nodes
 
+        Pruning by relevance starts from the beginning (relevance is calculated internally based on best node and depth)
+        Other prunings start at pruning depth.
+            - Pruning distance factor is used to prune nodes at every depth of the tree: only nodes every depth * pruning_distance_factor are kept.
+
+        Max queue size allows only a certain a mount of nodes to be stored (and processed).
+            - If max queue size is too small: nodes on the right of the tree will never be used (can't be stored in the queue).
+            - If maz queue size is too large: more nodes will have to be processed and total processing time will be increased.
         Returns nothing.
         """
-        now = datetime.now()
-        current_time = now.strftime("%d%m_%H%M%S")
-        logging.basicConfig(filename="charlotte_" + current_time + ".log",level=logging.DEBUG)
+        protein_size = len(self.source_protein.get_aminos())
         
-        # set first coordinate to (0,0) and occupied fold to 0
         non_visited_nodes = []
         non_visited_nodes.append(self.first_node)
         visited_nodes = []
-        good_but_pruned = [] #[[None for x in range(1000)] for y in range(len(self.source_protein.aminos)* 5)]
+        good_but_pruned = []
         best_node = self.first_node
         
         # Goes through the queue of non_visited_nodes
@@ -53,19 +58,15 @@ class BFSPlus3D():
             
             node = non_visited_nodes.pop(0)
             
-            if node.depth < len(self.source_protein.get_aminos()) - 1:
-                    
+            if node.depth < protein_size - 1:
+
                 if node.score > self.relevance_score and node.depth > self.pruning_depth:
-                    logging.debug(f'Score is not interesting anymore (relevance score = { self.relevance_score }), skipping to next node.')
                     continue
 
-                assert isinstance(node, ProteinTree)
-            
                 # Retrieves the current protein and its last added amino
                 protein = node.current_protein
                 current_amino = protein.get_aminos()[node.depth]
-                logging.debug(f'Entering new non visited node with depth {node.depth}, current protein: {protein.to_string()}, current score: {node.score}.')
-            
+                
                 if current_amino is not None:
                     if node.depth == 0:
                         current_amino.set_coordinate((0, 0, 0))
@@ -74,8 +75,6 @@ class BFSPlus3D():
         
                     folds = self.get_possible_folds(protein, x, y, z) if node.depth > 0 else [1]
                     next_amino = self.source_protein.get_aminos()[node.depth + 1]
-                    logging.debug(f'Possible folds: {folds}')
-
                     
                     # Goes through all possible folds from current protein
                     for fold in folds:
@@ -86,7 +85,6 @@ class BFSPlus3D():
                         # Computes new coordinate for the newly created amino after fold
                         new_x, new_y, new_z = calculate_coordinate(current_amino.fold, (x, y, z))
                         new_amino.set_coordinate((new_x, new_y, new_z))
-                        logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
                         
                         # Copies current protein and add new amino at the end
                         new_protein = copy.deepcopy(protein)
@@ -94,78 +92,67 @@ class BFSPlus3D():
                         
                         curr_score = calculate_score(new_protein)
                         
-                        # Pruning: only adds 1 node per pruning_distance
+                        # Relevance pruning
                         if curr_score <= self.relevance_score:
-                            # Creates new node for the current protein
+                
+                            # Creates new node for the new protein
                             new_node = ProteinTree(new_protein, node, node.depth + 1, self.node_count + 1)
                             new_node.score = curr_score
                             self.node_count = self.node_count + 1
                             node.next_amino.append(new_node)
                                 
-                            if (len(non_visited_nodes) < self.max_queue_size) and (len(non_visited_nodes) == 0 or self.node_count >= (non_visited_nodes[-1].id + (node.depth * 4))):
-                                logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
+                            # Depth and distance pruning
+                            if (len(non_visited_nodes) < self.max_queue_size) and (len(non_visited_nodes) == 0 or self.node_count >= (non_visited_nodes[-1].id + (node.depth * self.pruning_distance_factor))):
                                 
                                 # Adds node to queue
                                 non_visited_nodes.append(new_node)
 
                                 # If score has improved, update best node
-                                # !! To do: what if after pruning, the best node ends up leading to an impossible protein?
-                                # -> Keep track of "best nodes"? Go back in tree?
                                 if (
                                     new_node.score < best_node.score or
-                                    (new_node.score <= best_node.score and new_node.depth == len(self.source_protein.aminos)) #or
-                                    #(new_node.score <= best_node.score and new_node.parent == best_node)
+                                    (new_node.score <= best_node.score and new_node.depth == protein_size)
                                     ):
                                     best_node = new_node
 
+                                    # Calculates new relevance score (this heuristic doesn't come from anywhere else and was invented by the student who wrote this code - it can probably be improved)
                                     if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                        self.relevance_score = best_node.score + (self.source_protein.source_string[0:node.depth].count('P') * 6/len(self.source_protein.source_string))
-                                        #good_but_pruned.clear()
-                                    logging.debug(f"Changing best node, new best node is at depth {best_node.depth}, new best score is {best_node.score}, new relevance score is {self.relevance_score}")
-                                    logging.debug(f"Current protein = {new_protein.to_string_with_coord()}")
+                                        self.relevance_score = best_node.score + (self.source_protein.source_string[0:node.depth].count('P') * 6 / len(self.source_protein.source_string))
+
+                            # The node has been pruned, but did have a good score: we store it somewhere safe.        
                             else:
-                                if len(good_but_pruned) < 4000:
+                                if len(good_but_pruned) < self.max_savestack_size:
                                     good_but_pruned.append(new_node)
-                                # elif len(good_but_pruned) == self.max_queue_size:
-                                #     good_but_pruned.pop(0)
-                                #     good_but_pruned.append(new_node)
-                                    logging.debug(f"Added node to good_but_pruned (depth = { new_node.depth }, score = {new_node.score}), current size = { len(good_but_pruned) }")
-            
-            elif node.depth == (len(self.source_protein.aminos) - 1) and node.score == best_node.score:
+
+            # Maximal depth has been reached, let's stop here.   
+            elif node.depth == (protein_size - 1) and node.score == best_node.score:
                 best_node = node
-                logging.debug(f'Node depth is { node.depth }, finishing up.')
                 protein = node.current_protein
                     
                 self.finished_folded_protein = protein
-                print(f"Depth = {node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
-
                 break
-
 
             # Updates queue and archive
             visited_nodes.append(node)
 
-            if len(non_visited_nodes) == 0 and best_node.depth <= len(self.source_protein.aminos):
+            # The queue of selected nodes is empty, but the end of the protein couldn't be reached
+            # Takes a node from the stack of pruned nodes that had a decent score and start again from there
+            if len(non_visited_nodes) == 0 and best_node.depth <= protein_size:
                 if len(good_but_pruned) > 0:
                     retrieved_node = good_but_pruned.pop()
                     non_visited_nodes.append(retrieved_node)
-                    logging.debug(f"Taking node from good_but_pruned: node with depth = { retrieved_node.depth }, score = { retrieved_node.score }")
                     best_node = retrieved_node
-                else:
-                    logging.debug(f"good_but_pruned is empty.")
             
-            if (best_node.depth == len(self.source_protein.aminos) - 1 or
-                node.depth == len(self.source_protein.aminos) - 1 and node.parent == best_node):
-                logging.debug(f"BREAK! (Best node depth = {best_node.depth}, current depth = {node.depth}, parent is best node = {(node.parent == best_node)}")
+            # Reaches the maximal depth with best node: stops here.
+            if (best_node.depth == protein_size - 1 or
+                node.depth == protein_size - 1 and node.parent == best_node):
                 break 
-
-                logging.debug(f"Non visited nodes size = { len(non_visited_nodes) }, best_node depth = { best_node.depth } (score = { best_node.score }), current depth = { node.depth }, origin size = { len(self.source_protein.aminos) }")
         
         # Picks best node
         protein = best_node.current_protein
                      
         self.finished_folded_protein = protein
-        print(f"Depth = {best_node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
+        print(f"Depth = {best_node.depth}, original length = { protein_size }, end length = { len(protein.aminos) }")
+
 
 
     def get_possible_folds(self, protein, x, y, z):  
@@ -186,11 +173,13 @@ class BFSPlus3D():
         return possible_folds
 
 
+
     def is_free_space(self, protein, coordinate):
         """
         Returns True if coordinate is not occupied, else False.
         """
         return all([amino_object.coordinate != coordinate for amino_object in protein.get_aminos()])
+
 
 
     def set_score(self, protein=None):
