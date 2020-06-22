@@ -1,21 +1,22 @@
 **/*.pyc
 **/*.DS_Store
-sanne_test.py
 __pycache__/*
 
 .vscode/
 
+sanne_test.py
+charlotte.py
+
 output.csv
+data/output.csv
 protein.txt
+data/proteins.txt
+
 charlotte.log
-thomas.log
-notes_charlotte.txt
-data/output.csv
-data/proteins.txt
-data/output.csv
-charlotte_pickles/*
-charlotte_12_17_37.log
 charlotte_*.log
+charlotte_pickles/*
+notes_charlotte.txt
+
+thomas.log
 thomas_*.log
-data/proteins.txt
-data/output.csv
+
