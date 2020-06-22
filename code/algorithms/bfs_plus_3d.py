@@ -35,7 +35,6 @@ class BFSPlus3D():
             2. add nodes to list of nodes
             3. visit non visited nodes
 
-        No pruning yet.
         Returns nothing.
         """
         now = datetime.now()
