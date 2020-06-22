@@ -1,5 +1,5 @@
 import random
-from code import calculate_score, calculate_coordinate, Amino, Protein
+from code import Amino, Protein
 
 class HillClimber():
     """
@@ -46,7 +46,7 @@ class HillClimber():
                     mutation_count += 1
 
             # update best score if new configuration is better, else undo mutation series
-            score = calculate_score(self.protein)
+            score = self.protein.calculate_score()
             if score < self.best_score:
                 self.best_score = score
             else:
@@ -78,7 +78,7 @@ class HillClimber():
 
             # change coordinates and previous amino for amino after selected amino
             elif amino.id == pos + 1:
-                new_co = calculate_coordinate(fold, co)
+                new_co = self.protein.calculate_coordinate(fold, co)
                 amino.set_previous_amino(-fold)
                 amino.set_coordinate(new_co)
 
@@ -88,7 +88,7 @@ class HillClimber():
 
             # change coordinates for every amino after selected amino
             elif amino.id > pos + 1:
-                new_co = calculate_coordinate(fold, co)
+                new_co = self.protein.calculate_coordinate(fold, co)
                 amino.set_coordinate(new_co)
 
                 # update fold and coordinate

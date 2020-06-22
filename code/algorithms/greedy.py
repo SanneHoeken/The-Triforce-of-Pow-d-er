@@ -1,6 +1,5 @@
 import random
-from code import calculate_score, Amino, Protein
-from code.algorithms.random import RandomFolder
+from code import Amino, Protein, RandomFolder
 
 class BestGreedy():
     """

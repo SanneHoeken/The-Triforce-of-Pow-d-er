@@ -2,7 +2,8 @@ import csv
 import profile
 
 from code.visualisations import visualize
-from code.classes import protein as prt, amino, timer
+from code.classes import protein as prt, amino
+from code import Timer
 from code.algorithms import thomas_protein_3Dfolder as prt_folder
 
 if __name__ == "__main__":
@@ -11,7 +12,7 @@ if __name__ == "__main__":
     # intialize protein
     protein = prt.Protein(file=data_file)
 
-    time = timer.Timer()
+    time = daaTimer()
     time.start()
 
     # fold protein with algorithm
