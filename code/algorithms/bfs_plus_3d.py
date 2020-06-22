@@ -25,7 +25,7 @@ class BFSPlus3D():
         self.pruning_distance = 0
         self.pruning_distance_heur = "node.depth * 4"
         self.node_count = 0
-        self.max_queue_size = 50000
+        self.max_queue_size = 100000
 
     def fold(self, fold_position = 0):
         """
