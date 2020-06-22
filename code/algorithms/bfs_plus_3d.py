@@ -151,7 +151,6 @@ class BFSPlus3D():
         protein = best_node.current_protein
                      
         self.finished_folded_protein = protein
-        print(f"Depth = {best_node.depth}, original length = { protein_size }, end length = { len(protein.aminos) }")
 
 
 
