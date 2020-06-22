@@ -8,7 +8,7 @@ from code.algorithms.help_methods.calculate_score import calculate_score
 from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 from code.classes.protein_tree import ProteinTree
 
-class CharlotteProteinFolder():
+class BFSPlus():
 
     def __init__(self, protein, pruning_depth = 8, pruning_distance_factor = 4, max_queue_size = 2000):
         """
@@ -25,6 +25,8 @@ class CharlotteProteinFolder():
         self.pruning_distance_factor = pruning_distance_factor # Advice: 4
         self.max_queue_size = max_queue_size # Advice: 2000
 
+
+
     def fold(self, fold_position = 0):
         """
         Stores folded protein in attribute finished_folded_protein.
@@ -35,15 +37,14 @@ class CharlotteProteinFolder():
 
         Pruning by relevance starts from the beginning (relevance is calculated internally based on best node and depth)
         Other prunings start at pruning depth.
-            - Pruning distance factor is used prune nodes at every depth of the tree: only nodes every depth * pruning_distance_factor are kept.
+            - Pruning distance factor is used to prune nodes at every depth of the tree: only nodes every depth * pruning_distance_factor are kept.
 
         Max queue size allows only a certain a mount of nodes to be stored (and processed).
             - If max queue size is too small: nodes on the right of the tree will never be used (can't be stored in the queue).
             - If maz queue size is too large: more nodes will have to be processed and total processing time will be increased.
         Returns nothing.
         """
-
-        # Set first coordinate to (0,0) and occupied fold to 0
+        protein_size = len(self.source_protein.get_aminos())
         non_visited_nodes = []
         non_visited_nodes.append(self.first_node)
         visited_nodes = []
@@ -55,14 +56,14 @@ class CharlotteProteinFolder():
             
             node = non_visited_nodes.pop(0)
             
-            if node.depth >= len(self.source_protein.get_aminos()) - 1:
+            # Depth is too high, we shouldn't go further, skip
+            if node.depth >= protein_size - 1:
                 continue
 
+            # Score is too high and irrelevant, skip
             if node.score > self.relevance_score and node.depth > self.pruning_depth:
                 continue
 
-            assert isinstance(node, ProteinTree)
-        
             # Retrieves the current protein and its last added amino
             protein = node.current_protein
             current_amino = protein.get_aminos()[node.depth]
@@ -74,7 +75,7 @@ class CharlotteProteinFolder():
                 x, y = current_amino.coordinate
     
                 folds = self.get_possible_folds(protein, x, y) if node.depth > 0 else [1]
-                next_amino = self.source_protein.get_aminos()[node.depth + 1]
+                next_amino = self.source_protein.aminos[node.depth + 1]
                 
                 # Goes through all possible folds from current protein
                 for fold in folds:
@@ -107,27 +108,28 @@ class CharlotteProteinFolder():
                             non_visited_nodes.append(new_node)
 
                             # If score has improved, update best node
-                            if new_node.score < best_node.score or (new_node.score == best_node.score and new_node.depth == len(self.source_protein.aminos)):
+                            if new_node.score < best_node.score or (new_node.score == best_node.score and new_node.depth == protein_size):
                                 best_node = new_node
 
+                                # Calculates new relevance score (this heuristic doesn't come from anywhere else and was invented by the student who wrote this code - it can probably be improved)
                                 if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                    self.relevance_score = best_node.score + 1 + (self.source_protein.source_string.count('P') * 4/len(self.source_protein.source_string))
+                                    self.relevance_score = best_node.score + 1 + (self.source_protein.source_string.count('P') * 4/protein_size)
                                     
                         else:
 
+                            # Add node to the queue of other good nodes that have been pruned.
                             if len(good_but_pruned) < self.max_queue_size:
                                 good_but_pruned.append(new_node)
                             
+                            # Remove oldest good but pruned node to add a new one.
                             elif len(good_but_pruned) == self.max_queue_size:
                                 good_but_pruned.pop(0)
                                 good_but_pruned.append(new_node)
                             
-
-
             # Updates queue and archive
             visited_nodes.append(node)
 
-            if len(non_visited_nodes) == 0 and best_node.depth <= len(self.source_protein.aminos):
+            if len(non_visited_nodes) == 0 and best_node.depth <= protein_size:
                 non_visited_nodes.append(good_but_pruned.pop())
                         
         # Picks best node
@@ -155,11 +157,13 @@ class CharlotteProteinFolder():
         return possible_folds
 
 
+
     def is_free_space(self, protein, coordinate):
         """
         Returns True if coordinate is not occupied, else False.
         """
         return all([amino_object.coordinate != coordinate for amino_object in protein.get_aminos()])
+
 
 
     def set_score(self, protein=None):
