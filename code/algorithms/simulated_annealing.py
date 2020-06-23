@@ -1,5 +1,5 @@
 import random, math
-from code import calculate_score, calculate_coordinate, Amino, Protein, HillClimber
+from code import Amino, Protein, HillClimber
 
 class SimulatedAnnealing(HillClimber):
     """
@@ -41,7 +41,7 @@ class SimulatedAnnealing(HillClimber):
                     mutation_count += 1
 
             # calculate score of mutated configuration
-            score = calculate_score(self.protein)
+            score = self.protein.calculate_score()
 
             # calculate probability of accepting the mutated configuration
             probability = math.exp((self.best_score - score) / self.T)

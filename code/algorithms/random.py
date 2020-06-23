@@ -1,5 +1,5 @@
 import random
-from code import calculate_score, Amino, Protein
+from code import Amino, Protein
 
 class BestOfRandom():
     """
@@ -77,7 +77,7 @@ class RandomFolder():
                 self.coordinates = set()
 
         # calculate score and set in protein
-        score = calculate_score(self.protein)
+        score = self.protein.calculate_score()
         self.protein.set_score(score)
 
 
@@ -170,4 +170,4 @@ class RandomFolder():
         self.protein.aminos[id + 1].set_previous_amino(-values[0])
         
         # return score of new configuration
-        return calculate_score(self.protein)
+        return self.protein.calculate_score()
