@@ -72,6 +72,6 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
   De score van een configuratie wordt vergeleken met deze twee variabelen. Als de score beter is dan de beste score, wordt de partiële configuratie niet gepruned. Een score slechter dan de gemiddelde score wordt gepruned met een gegeven probability p1. Een score beter dan de gemiddelde waarde maar slechter dan de beste score wordt gepruned met een probability p2. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/branch_and_bound.py) de code voor implementatiedetails en de bronvermelding.
 
 ## Auteurs
-- Thomas van Genderen
-- Charlotte Lafage
-- Sanne Hoeken
+- Thomas van Genderen (studentnummer: 11218290)
+- Charlotte Lafage (studentnummer: 12977772)
+- Sanne Hoeken (studentnummer: 12901202)
