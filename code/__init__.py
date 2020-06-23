@@ -8,6 +8,4 @@ from code.algorithms.random import BestOfRandom
 from code.algorithms.hill_climber import HillClimber
 from code.algorithms.simulated_annealing import SimulatedAnnealing
 from code.algorithms.bfs_plus import BFSPlus
-from code.algorithms.bfs_plus_3d import BFSPlus3D
-from code.algorithms.bfs_plus_merge import BFSPlusMerge
-from code.algorithms.thomas_protein_folder import BBProteinFolder
+from code.algorithms.branch_and_bound import BranchBound

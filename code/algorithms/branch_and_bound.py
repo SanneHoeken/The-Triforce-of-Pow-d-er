@@ -2,8 +2,22 @@ import random
 from code import Amino, Protein
 from code.algorithms.greedy import Greedy
 
-class BranchBound(Greedy):
+"""
+This algorithm is based on the work of:
+Chen, M., & Huang, W. Q. (2005). A branch and bound algorithm for the protein folding problem in the HP lattice model. Genomics, proteomics & bioinformatics, 3(4), 225-230.
+"""
 
+class BranchBound(Greedy):
+    """
+    The BranchBound class that recursively folds a protein by searching for the best possibilities. 
+    In the search method, the potency of the partial configuration is assessed for each H- and C-amino. 
+    A negative evaluation leads to pruning of that configuration. No pruning is done at P-aminos. 
+    The potential of a configuration is determined by two variables: the average score of a configuration of 
+    a certain length and the best score for a configuration of a certain length. The score of a configuration 
+    is compared with these two variables. If the score is better than the best score, the partial configuration 
+    is not primed. A score worse than the average score is primed with a given probability p1. A score better 
+    than the average value but worse than the best score is pruned with a probability p1.
+    """
     def __init__(self, protein, p1=0.8, p2=0.5):
         self.protein = protein
         self.p1 = p1
@@ -12,9 +26,13 @@ class BranchBound(Greedy):
         self.best_scores = {}
         self.best_protein = None
         self.best_score = 1
+        self.finished_folded_protein = self.protein
 
 
     def run(self):
+        """
+        Runs the search method. After searching, the best values and score are set in the protein.
+        """
         self.search(0)
         
         # Set best protein values to protein
@@ -28,6 +46,9 @@ class BranchBound(Greedy):
 
 
     def search(self, id):
+        """
+        Searching depht first by recursively visiting every configuration (except for the pruned configurations)
+        """
         
         # Get possible values for current amino (specified with given id)
         possible_values = self.get_possible_values(self.protein.get_aminos()[id])
@@ -74,14 +95,14 @@ class BranchBound(Greedy):
                     self.set_values(values, id)
                     self.search(id + 1)
                 
-                # Continue with probility p1 if score is higher than meanscore
+                # Continue with probility 1 - p1 if score is higher than meanscore
                 meanscore = sum(self.all_scores[id]) / len(self.all_scores[id])
                 if score > meanscore: 
                     if random.random() > self.p1: 
                         self.set_values(values, id)
                         self.search(id + 1)
 
-                # Continue with probability p2 if score is higher than best score but lower than meanscore
+                # Continue with probability 1 - p2 if score is higher than best score but lower than meanscore
                 if score > bestscore and score <= meanscore: 
                     if random.random() > self.p2:
                         self.set_values(values, id)
