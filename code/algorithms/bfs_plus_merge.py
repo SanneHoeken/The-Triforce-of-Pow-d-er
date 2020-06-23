@@ -22,9 +22,9 @@ class BFSPlusMerge():
         default_param['pruning_depth_2'] = 8
         default_param['pruning_depth_3'] = 4
         default_param['pruning_distance_2'] = 4
-        default_param['pruning_distance_3'] = 4
+        default_param['pruning_distance_3'] = 6
         default_param['max_queue_size_2'] = 2000
-        default_param['max_queue_size_3'] = 100000
+        default_param['max_queue_size_3'] = 10000
         default_param['max_savestack_size_2'] = 2000
         default_param['max_savestack_size_3'] = 4000
 
@@ -129,7 +129,7 @@ class BFSPlusMerge():
 
                                     # Calculates new relevance score (this heuristic doesn't come from anywhere else and was invented by the student who wrote this code - it can probably be improved)
                                     if best_node.depth > 0 and node.depth >= self.pruning_depth:
-                                        self.relevance_score = best_node.score + 3 - self.dimension + (self.source_protein.source_string[0:node.depth].count('P') * (self.dimension * 2) / protein_size)
+                                        self.relevance_score = best_node.score + 3 - self.dimension + self.source_protein.source_string[0:node.depth].count('C') + (self.source_protein.source_string[0:node.depth].count('P') * (self.dimension * 2) / protein_size)
 
                             # The node has been pruned, but did have a good score: we store it somewhere safe.        
                             else:
