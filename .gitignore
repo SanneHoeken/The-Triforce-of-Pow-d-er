@@ -1,17 +1,3 @@
 **/*.pyc
 **/*.DS_Store
 __pycache__/*
-
-.vscode/
-
-charlotte.py
-
-output.csv
-data/output.csv
-protein.txt
-data/proteins.txt
-
-charlotte.log
-charlotte_*.log
-charlotte_pickles/*
-notes_charlotte.txt
