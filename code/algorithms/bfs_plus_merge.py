@@ -22,7 +22,7 @@ class BFSPlusMerge():
         default_param['pruning_depth_2'] = 8
         default_param['pruning_depth_3'] = 4
         default_param['pruning_distance_2'] = 4
-        default_param['pruning_distance_3'] = 4
+        default_param['pruning_distance_3'] = 6
         default_param['max_queue_size_2'] = 2000
         default_param['max_queue_size_3'] = 100000
         default_param['max_savestack_size_2'] = 2000
