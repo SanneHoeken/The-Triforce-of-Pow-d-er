@@ -219,7 +219,7 @@ if __name__ == "__main__":
         time.start() 
 
         if param_input == 2:
-            BFSplus(protein, d_input, pruning_depth, pruning_distance, queue_size)
+            folder = BFSplus(protein, d_input, pruning_depth, pruning_distance, queue_size)
         else:
             folder = BFSplus(protein, d_input)
 
