@@ -89,6 +89,10 @@ class Protein():
         self.aminos.append(amino)
 
 
+    def append_amino(self, amino):
+        self.aminos.append(amino)
+
+
     def get_amino(self, coordinate):
         
         # returns amino that is present on a certain coordinate

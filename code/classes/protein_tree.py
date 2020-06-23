@@ -20,9 +20,30 @@ class ProteinTree():
         self.score = 0
         self.id = 0
 
+
+    def get_parent(self):
+        return self.parent
+
+    def get_depth(self):
+        return self.depth
+
+    def get_score(self):
+        return self.score
+
+    def set_score(self, score):
+        self.score = score
+
+    def get_id(self):
+        return self.id
+
+    def get_current_protein(self):
+        return self.current_protein
+    
+
     def add_amino(self, amino):
         """
         Adds amino (ProteinTree object) as node to the list attribute next_amino.
+        Arguments: Amino or ProteinTree (if amino, will create a ProteinTree object based on that Amino)
         """
         # Checks that the argument is of the correct class, so as not to add a wrong object to the list of possibilities
         if isinstance(amino, ProteinTree):

@@ -26,6 +26,10 @@ class Amino():
         return self.fold
 
 
+    def get_type(self):
+        return self.type
+
+
     def set_previous_amino(self, previous_amino):
         """
         = negative of fold of previous amino
