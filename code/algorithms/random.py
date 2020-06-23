@@ -163,11 +163,11 @@ class RandomFolder():
         previous fold of that amino's next neighbor 
         """
         # set fold of current amino
-        self.protein.aminos[id].set_fold(values[0])
+        self.protein.get_aminos()[id].set_fold(values[0])
 
         # set coordinate and previous amino of next amino
-        self.protein.aminos[id + 1].set_coordinate(values[1])
-        self.protein.aminos[id + 1].set_previous_amino(-values[0])
+        self.protein.get_aminos()[id + 1].set_coordinate(values[1])
+        self.protein.get_aminos()[id + 1].set_previous_amino(-values[0])
         
         # return score of new configuration
         return self.protein.calculate_score()

@@ -1,8 +1,9 @@
 import csv
+from PIL import Image
 from code import visualize
 from code import Protein, Amino, Timer
 from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing
-from code import BFSPlus, BFSPlus3D, BBProteinFolder
+from code import BFSPlusMerge, BBProteinFolder
 
 if __name__ == "__main__":
 
@@ -32,6 +33,9 @@ if __name__ == "__main__":
 
     if algorithm_input == 1:
         
+        image = Image.open('data/iterations_random.png')
+        image.show()
+
         iters = int(input("""\nHow many iterations do you want the Random algorithm to run?
         Type the amount.\n"""))
 
@@ -50,6 +54,9 @@ if __name__ == "__main__":
 
     elif algorithm_input == 2:
         
+        image = Image.open('data/iterations_greedy.png')
+        image.show()
+
         iters = int(input("""\nHow many iterations do you want the Greedy algorithm to run?
         Type the amount.\n"""))
 
@@ -75,6 +82,9 @@ if __name__ == "__main__":
 
         if starting == 1:
 
+            image = Image.open('data/iterations_random.png')
+            image.show()
+
             starting_iters = int(input("""\nHow many iterations do you want the Random algorithm to run?
             Type the amount.\n"""))
             
@@ -84,6 +94,9 @@ if __name__ == "__main__":
             starting_folder.run()
 
         if starting == 2:
+
+            image = Image.open('data/iterations_greedy.png')
+            image.show()
 
             starting_iters = int(input("""\nHow many iterations do you want the Greedy algorithm to run?
             Type the amount.\n"""))
@@ -95,6 +108,9 @@ if __name__ == "__main__":
 
         print(f"Score of starting state is: {starting_folder.protein.get_score()}\n")
         
+        image = Image.open('data/iterations_hill_annealing.png')
+        image.show()
+
         iters = int(input("""How many iterations do you want the Hillclimber algorithm to run?
         Type the amount.\n"""))
         muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Suggested: 4)
@@ -123,6 +139,9 @@ if __name__ == "__main__":
 
         if starting == 1:
 
+            image = Image.open('data/iterations_random.png')
+            image.show()
+
             starting_iters = int(input("""\nHow many iterations do you want the Random algorithm to run?
             Type the amount.\n"""))
             
@@ -133,6 +152,9 @@ if __name__ == "__main__":
 
         if starting == 2:
 
+            image = Image.open('data/iterations_greedy.png')
+            image.show()
+
             starting_iters = int(input("""\nHow many iterations do you want the Greedy algorithm to run?
             Type the amount.\n"""))
             
@@ -142,7 +164,10 @@ if __name__ == "__main__":
             starting_folder.run()
 
         print(f"Score of starting state is: {starting_folder.protein.get_score()}\n")
-        
+
+        image = Image.open('data/iterations_hill_annealing.png')
+        image.show()
+
         iters = int(input("""How many iterations do you want the Simulated Annealing algorithm to run?
         Type the amount.\n"""))
         muts = int(input("""\nHow many mutations do you want the algorithm to execute per iteration? (Suggested: 4)
@@ -176,8 +201,8 @@ if __name__ == "__main__":
                 queue_size = int(input("""\nWhat maximal size for the queue? (Suggested: 2000)\n"""))
             else:
                 pruning_depth = int(input("""\nFrom what depth do you want to start pruning? (Suggested: 4)\n"""))
-                pruning_distance = int(input("""\nWhat is the value of the pruning distance factor? (Suggested: 4)\n"""))
-                queue_size = int(input("""\nWhat maximal size for the queue? (Suggested: 100000)\n"""))
+                pruning_distance = int(input("""\nWhat is the value of the pruning distance factor? (Suggested: 6)\n"""))
+                queue_size = int(input("""\nWhat maximal size for the queue? (Suggested: 10000)\n"""))
 
 
         print("\nRunning Breadth First Search ++++ algorithm ...\n")
@@ -185,15 +210,9 @@ if __name__ == "__main__":
         time.start() 
 
         if param_input == 2:
-            if d_input == 2:
-                folder = BFSPlus(protein, pruning_depth, pruning_distance, queue_size)
-            else:
-                folder = BFSPlus3D(protein, pruning_depth, pruning_distance, queue_size)
+            BFSPlusMerge(protein, d_input, pruning_depth, pruning_distance, queue_size)
         else:
-            if d_input == 2:
-                folder = BFSPlus(protein)
-            else:
-                folder = BFSPlus3D(protein)
+            folder = BFSPlusMerge(protein, d_input)
 
         folder.fold()
         folder.set_score()
