@@ -20,43 +20,44 @@ class SimulatedAnnealing(HillClimber):
         """
         for i in range(self.iterations):
 
-            # store values of current protein configuration
+            # Store values of current protein configuration
             self.archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
             
-            # consecultively mutates protein specified times
+            # Consecultively mutates protein specified times
             mutation_count = 0
             
             while mutation_count < self.mutations_per_iteration:
                 
-                # store values of current protein configuration
+                # Store values of current protein configuration
                 self.tmp_archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
                 
-                # mutate protein
+                # Mutate protein
                 self.mutate()
 
-                # undo mutation if new configuration is not valid
+                # Undo mutation if new configuration is not valid
                 if not self.is_valid_protein():
                     self.undo_mutation(self.tmp_archive)
                 else:
                     mutation_count += 1
 
-            # calculate score of mutated configuration
+            # Calculate score of mutated configuration
             score = self.protein.calculate_score()
 
-            # calculate probability of accepting the mutated configuration
+            # Calculate probability of accepting the mutated configuration
+            ### COMMENT TOEVOEGEN: even uitleggen dat dit een heuristiek is en wat de invloed hiervan op de probability is?
             probability = math.exp((self.best_score - score) / self.T)
             
-            # update best score if acceptance probability is higher than random probabiity
-            # else undo mutation series
+            # Update best score if acceptance probability is higher than random probabiity
+            # Else undo mutation series
             if random.random() < probability:
                 self.best_score = score
             else:
                 self.undo_mutation(self.archive)
 
-            # update temperature
+            # Update temperature
             self.update_temperature()
 
-        # set score of protein
+        # Set score of protein
         self.protein.set_score(self.best_score)
 
 
