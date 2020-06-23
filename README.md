@@ -66,7 +66,10 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
   Met gebruik en goed balanceren van deze parameters kan het algoritme snel de relevante vouwingen selecteren en een eiwit met een hoge score opbouwen. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/bfs_plus.py) code voor implementatiedetails.
 6. **Branch & Bound.**
   Het Branch & Bound algoritme is gebaseerd op het werk van Mao Chen & Wen-Qi Huang, 2005. Het Branch & Bound algoritme vouwt een eiwit amino voor amino door te zoeken naar de beste mogelijkheden. In de zoekmethode wordt voor elke H- en C-amino de potentie van de partiële configuratie beoordeeld. Een negatieve evaluatie leidt tot pruning van die configuratie. Bij P-aminos wordt er niet gepruned. 
-  De potentie van een configuratie wordt bepaald aan de hand van twee variabelen: de gemiddelde score van een configuratie met een bepaalde lengte en de beste score voor een configuratie met een bepaalde lengte. De score van een configuratie wordt vergeleken met deze twee variabelen. Als de score beter is dan de beste score, wordt de partiële configuratie niet gepruned. Een score slechter dan de gemiddelde score wordt gepruned met een gegeven probability p1. Een score beter dan de gemiddelde waarde maar slechter dan de beste score wordt gepruned met een probability p1. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/branch_and_bound.py) de code voor implementatiedetails en de bronvermelding.
+  De potentie van een configuratie wordt bepaald aan de hand van twee variabelen: 
+  * De gemiddelde score van een configuratie met een bepaalde lengte 
+  * De beste score voor een configuratie met een bepaalde lengte. 
+  De score van een configuratie wordt vergeleken met deze twee variabelen. Als de score beter is dan de beste score, wordt de partiële configuratie niet gepruned. Een score slechter dan de gemiddelde score wordt gepruned met een gegeven probability p1. Een score beter dan de gemiddelde waarde maar slechter dan de beste score wordt gepruned met een probability p1. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/branch_and_bound.py) de code voor implementatiedetails en de bronvermelding.
 
 ## Auteurs
 - Thomas van Genderen
