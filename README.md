@@ -65,6 +65,8 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
     * Pruning op breedte: de gebruiker kan een afstandsfactor geven om meer nodes in de breedte te prunen (om te voorkomen dat er te veel nodes zijn met een vergelijkbare structuur en dezelfde score). Per diepte wordt er slechts één node bewaard iedere diepte * afstandsfactor node. 
   Met gebruik en goed balanceren van deze parameters kan het algoritme snel de relevante vouwingen selecteren en een eiwit met een hoge score opbouwen. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/bfs_plus.py) code voor implementatiedetails.
 6. **Depth First Search met Branch & Bound.**
+  Het Depth First Branch & Bound algoritme bouwt constructief en recursief het eiwit op. Dit doet het door een stack met mogelijke vouwingen af te lopen. Als de stack leeg is, wordt de vouwing met de minimale score als output gegeven. 
+  
   Hier informatie over het algoritme. Bekijk [hier](link naar de code) de code voor implementatiedetails.
 
 ## Auteurs

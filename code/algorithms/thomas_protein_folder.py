@@ -2,8 +2,6 @@ import copy
 import logging
 import random
 from datetime import datetime
-import cProfile, pstats, io
-import profile
 
 from code.classes.amino import Amino
 from code.classes.protein import Protein
@@ -22,11 +20,13 @@ class BBProteinFolder():
         first_protein = Protein(string=protein.get_aminos()[0].type)
         first_protein.aminos[0].set_coordinate((0, 0))
         self.first_node = ProteinTree(first_protein)
-        self.total_depth = round(len(protein.get_aminos()))
+        self.total_depth = len(protein.get_aminos())
         self.best_score = 0
         self.dict_best = dict()
         self.dict_count = dict()  
         self.dict_avg = dict()
+        #self.cointoss1 = cointoss1
+        #self.cointoss2 = cointoss2
 
     def fold(self, fold_position = 0):
         """
@@ -36,9 +36,9 @@ class BBProteinFolder():
             2. add nodes to list of nodes
             3. visit non visited nodes
         """
-        now = datetime.now()
-        current_time = now.strftime("%d%m_%H%M%S")
-        logging.basicConfig(filename="thomas_" + current_time + ".log",level=logging.DEBUG)
+        #now = datetime.now()
+        #current_time = now.strftime("%d%m_%H%M%S")
+        #logging.basicConfig(filename="thomas_" + current_time + ".log",level=logging.DEBUG)
         
         # set first coordinate to (0,0) and occupied fold to 0
         non_visited_nodes = []
@@ -51,15 +51,14 @@ class BBProteinFolder():
             self.dict_best[amino_object.id] = 0
             self.dict_count[amino_object.id] = 0
 
-        # Goes through the queue of non_visited_nodes TODO
+        # Goes through the queue of non_visited_nodes
         while len(non_visited_nodes) > 0:
 
             node = non_visited_nodes.pop()
 
-            assert isinstance(node, ProteinTree)
+            #assert isinstance(node, ProteinTree)
         
             #logging.debug(f'best_node score: {best_node.score}, depth: {node.depth}.')
-
 
             # Retrieves the current protein and its last added amino
             protein = node.current_protein
@@ -81,7 +80,6 @@ class BBProteinFolder():
                 if node.depth == len(self.source_protein.get_aminos()) - 1:
                     continue
 
-                
                 # Goes through all possible folds from current protein
                 for fold in folds:
                     
@@ -90,7 +88,7 @@ class BBProteinFolder():
                     new_amino.previous_amino = 0 - fold
 
                     # Computes new coordinate for the newly created amino after fold
-                    new_x, new_y = calculate_coordinate(current_amino.fold, (x, y))
+                    new_x, new_y = protein.calculate_coordinate(current_amino.fold, (x, y))
                     new_amino.set_coordinate((new_x, new_y))
                     #logging.debug(f'\t Trying fold {fold} with new amino {new_amino.type}. New coordinates: {new_x, new_y}')
                     
@@ -98,34 +96,34 @@ class BBProteinFolder():
                     new_protein = copy.deepcopy(protein)
                     new_protein.aminos.append(new_amino)
                     
-                    curr_score = calculate_score(new_protein)
+                    curr_score = new_protein.calculate_score()
                     
                     # data for candidate node
                     depth_best_score = self.dict_best[node.depth +1]
                     depth_avg_score = self.dict_avg[node.depth + 1]
-                    depth_count = self.dict_count[node.depth + 1]
 
-                    if self.is_viable(new_amino.type, depth_best_score, depth_avg_score, depth_count, curr_score) == 0:
+                    if self.is_viable(new_amino.type, depth_best_score, depth_avg_score, curr_score) == 0:
 
                         # Creates new node for the current protein
                         new_node = ProteinTree(new_protein, node, node.depth + 1)
                         new_node.score = curr_score
+                        current_protein = new_node.current_protein
 
                         node.next_amino.append(new_node)
                         #logging.debug(f'\t Score: {new_node.score}. Adding to non_visited_nodes, which now contains {len(non_visited_nodes) + 1} elements.')
                                 
                         new_count = self.dict_count[new_node.depth] + 1
-                        new_avg = round((self.dict_avg[new_node.depth] * self.dict_count[new_node.depth]) + calculate_score(new_node.current_protein)) / new_count
+                        new_avg = round((self.dict_avg[new_node.depth] * self.dict_count[new_node.depth]) + current_protein.calculate_score()) / new_count
                         self.dict_avg[new_node.depth] = new_avg
                         self.dict_count[new_node.depth] = new_count
 
-                        if calculate_score(new_node.current_protein) <= self.dict_best[new_node.depth]:
-                            self.dict_best[new_node.depth] = calculate_score(new_node.current_protein)
+                        if current_protein.calculate_score() <= self.dict_best[new_node.depth]:
+                            self.dict_best[new_node.depth] = current_protein.calculate_score()
                             #print(f'depth: {new_node.depth}, score: {self.total_depth}')
-                        if new_node.depth == self.total_depth - 1:
-                            best_node = new_node
-                            best_node.score = new_node.score
-                            #print('best_node updated')
+                            if new_node.depth == self.total_depth - 1:
+                                best_node = new_node
+                                best_node.score = new_node.score
+                                #print('best_node updated')
 
                         # Adds node to queue
                         non_visited_nodes.append(new_node)
@@ -135,7 +133,7 @@ class BBProteinFolder():
         protein = best_node.current_protein
                      
         self.finished_folded_protein = protein
-        print(f"Protein score: {calculate_score(protein)}")
+        print(f"Protein score: {protein.calculate_score()}")
         print(f"Depth = {best_node.depth}, original length = { len(self.source_protein.aminos) }, end length = { len(protein.aminos) }")
 
 
@@ -171,17 +169,17 @@ class BBProteinFolder():
         if protein == None:
             protein = self.finished_folded_protein
 
-        score = calculate_score(protein)
+        score = protein.calculate_score()
         protein.set_score(score)
     
-    def is_viable(self, aminotype, depth_best_score, depth_avg_score, depth_count, curr_score):
+    def is_viable(self, aminotype, depth_best_score, depth_avg_score, curr_score):
         if aminotype == 'P':
             return 0 
         if curr_score <= depth_best_score: 
             return 0
-        if curr_score <= depth_avg_score and self.cointoss(2):
+        if curr_score <= depth_avg_score and self.cointoss(0):
             return 0
-        if curr_score > depth_avg_score and self.cointoss(1):
+        if curr_score > depth_avg_score and self.cointoss(0):
             return 0
         return 1
 
@@ -189,5 +187,5 @@ class BBProteinFolder():
     def cointoss(self, threshold):
         random_value = random.randint(0,101)
         if random_value < threshold:
-            return 1
-        return 0
+            return 0
+        return 1
