@@ -15,11 +15,11 @@ class BFSplus():
         # Sets default parameters, which give decent results in practice
         default_param = {}
         default_param['pruning_depth_2'] = 8
-        default_param['pruning_depth_3'] = 8
+        default_param['pruning_depth_3'] = 4
         default_param['pruning_distance_2'] = 4
         default_param['pruning_distance_3'] = 6
         default_param['max_queue_size_2'] = 2000
-        default_param['max_queue_size_3'] = 3000
+        default_param['max_queue_size_3'] = 100000
         default_param['max_savestack_size_2'] = 2000
         default_param['max_savestack_size_3'] = 4000
 
@@ -35,7 +35,6 @@ class BFSplus():
         self.first_node = self.create_first_node()
 
 
-    ### DEZE FOLD FUNCTIE MODULAIR MAKEN; MEERDERE KLEINERE FUNCTIE
     def fold(self):
         """
         Folds protein using breadth first search + 4 different types of prunings.
@@ -67,7 +66,6 @@ class BFSplus():
                 protein = node.current_protein
                 current_amino = protein.get_aminos()[current_depth]
                 
-                ### HIER NOG EEN COMMENT
                 if current_amino is not None:
                     if current_depth == 0:
                         self.init_amino_coordinates(current_amino)
@@ -244,4 +242,4 @@ class BFSplus():
         Arguments: new score, current depth.
         Returns: nothing.
         """
-        self.relevance_score = score + 3 - self.dimension + self.source_protein.source_string[0:depth].count('C') + (self.source_protein.source_string[0:depth].count('P') * (self.dimension * 2) / len(self.source_protein.get_aminos()))
+        self.relevance_score = score + 3 - self.dimension + (self.source_protein.source_string[0:depth].count('P') * (self.dimension * 2) / len(self.source_protein.get_aminos()))
