@@ -1,5 +1,5 @@
 import random
-from code import calculate_score, Amino, Protein
+from code import Amino, Protein
 from code.algorithms.random import RandomFolder
 
 class BestGreedy():
@@ -92,7 +92,7 @@ class Greedy(RandomFolder):
         previous fold of that amino's next neighbor 
         """
         # reset fold of current amino
-        self.protein.aminos[id].set_fold(None)
+        self.protein.get_aminos()[id].set_fold(None)
 
         # reset coordinate and previous amino of next amino
-        self.protein.aminos[id + 1].reset_amino()
+        self.protein.get_aminos()[id + 1].reset_amino()

@@ -1,6 +1,5 @@
 import copy
 from code import Protein, Amino
-from code import calculate_coordinate, calculate_score
 
 class BruteForce():
     """
@@ -90,7 +89,7 @@ class BruteForce():
                 amino.set_fold(fold)
                     
                 # compute next coordinate following the fold
-                new_coordinate = calculate_coordinate(fold, coordinate)
+                new_coordinate = self.protein.calculate_coordinate(fold, coordinate)
 
                 # set next coordinate values
                 coordinate = new_coordinate
@@ -99,7 +98,7 @@ class BruteForce():
                 previous_amino = -fold
 
         # calculate score of folded protein
-        score = calculate_score(self.protein)
+        score = self.protein.calculate_score()
         
         return score
 

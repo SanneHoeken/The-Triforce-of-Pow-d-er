@@ -2,21 +2,22 @@ import csv
 import profile
 
 from code.visualisations import visualize
-from code.classes import protein as prt, amino, timer
-from code.algorithms import bfs_plus_3d as prt_folder
+from code import visualize
+from code import Protein, Amino, Timer
+from code.algorithms import bfs_plus_merge as prt_folder
 from code.algorithms.help_methods.pickling import *
 
 if __name__ == "__main__":
     data_file = "data/proteins.txt"
 
     # intialize protein
-    protein = prt.Protein(file=data_file, dimensionality=3)
+    protein = Protein(file=data_file, dimensionality=3)
 
-    time = timer.Timer()
+    time = Timer()
     time.start()
 
     # fold protein with algorithm
-    folder = prt_folder.BFSPlus3D(protein)
+    folder = prt_folder.BFSPlusMerge(protein, 3)
     # profile.run('folder.fold()')
     folder.fold()
     folder.set_score()

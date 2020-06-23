@@ -4,7 +4,6 @@ __pycache__/*
 
 .vscode/
 
-sanne_test.py
 charlotte.py
 
 output.csv
