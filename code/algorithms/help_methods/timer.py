@@ -1,6 +1,9 @@
 import time
 
 class Timer():
+    """
+    Provides the user with the duration between the start and end of a function
+    """
 
     def __init__(self):
         self.start_time = None

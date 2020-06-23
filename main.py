@@ -2,7 +2,7 @@ import csv
 from PIL import Image
 from code import visualize
 from code import Protein, Amino, Timer
-from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing, BranchBound, BFSPlus
+from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing, BranchBound, BFSplus
 
 if __name__ == "__main__":
 
@@ -219,9 +219,9 @@ if __name__ == "__main__":
         time.start() 
 
         if param_input == 2:
-            BFSPlus(protein, d_input, pruning_depth, pruning_distance, queue_size)
+            folder = BFSplus(protein, d_input, pruning_depth, pruning_distance, queue_size)
         else:
-            folder = BFSPlus(protein, d_input)
+            folder = BFSplus(protein, d_input)
 
         folder.fold()
         folder.set_score()

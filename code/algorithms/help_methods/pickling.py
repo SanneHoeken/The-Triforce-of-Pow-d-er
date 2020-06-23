@@ -1,6 +1,10 @@
 import pickle
 import os
 
+"""
+Pickling in general: takes objects and saves them in a file for later use.
+"""
+
 def store_pickle(directory_path, pickled):    
     pickle_path = directory_path +  "/pickle" + str(len(os.listdir(directory_path)))
     pickle_file = open(pickle_path, 'ab')

@@ -16,7 +16,7 @@ class BranchBound(Greedy):
     a certain length and the best score for a configuration of a certain length. The score of a configuration 
     is compared with these two variables. If the score is better than the best score, the partial configuration 
     is not primed. A score worse than the average score is primed with a given probability p1. A score better 
-    than the average value but worse than the best score is pruned with a probability p1.
+    than the average value but worse than the best score is pruned with a probability p2.
     """
     def __init__(self, protein, p1=0.8, p2=0.5):
         self.protein = protein
