@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 def visualize_protein(protein):
+    """
+    Takes a folded protein and uses the coordinates to construct a 3D or 2D image.
+    Coordinates of different aminotypes are represented by different colors.
+    """
     
     if protein.D == 2:
         x = [amino.coordinate[0] for amino in protein.aminos]
