@@ -3,8 +3,7 @@ import profile
 
 from code.visualisations import visualize
 from code import visualize
-from code import Protein, Amino, Timer
-from code.algorithms import bfs_plus_merge as prt_folder
+from code import Protein, Amino, Timer, BFSplus
 from code.algorithms.help_methods.pickling import *
 
 if __name__ == "__main__":
@@ -17,7 +16,7 @@ if __name__ == "__main__":
     time.start()
 
     # fold protein with algorithm
-    folder = prt_folder.BFSPlusMerge(protein, 3)
+    folder = BFSplus(protein, 3)
     # profile.run('folder.fold()')
     folder.fold()
     folder.set_score()
