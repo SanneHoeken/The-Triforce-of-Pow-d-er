@@ -1,10 +1,5 @@
 import copy
-import logging
-from datetime import datetime
-
-from code.classes.amino import Amino
-from code.classes.protein import Protein
-from code.classes.protein_tree import ProteinTree
+from code import Amino, Protein, ProteinTree
 
 class BFSPlusMerge():
 
@@ -14,10 +9,10 @@ class BFSPlusMerge():
         """
         self.source_protein = protein
         self.finished_folded_protein = None
-        
-        # Sets default parameters, which give decent results in practice.
-        self.dimension = dimension
 
+        self.dimension = dimension
+        
+        # Sets default parameters, which give decent results in practice
         default_param = {}
         default_param['pruning_depth_2'] = 8
         default_param['pruning_depth_3'] = 4
@@ -28,6 +23,7 @@ class BFSPlusMerge():
         default_param['max_savestack_size_2'] = 2000
         default_param['max_savestack_size_3'] = 4000
 
+        ### HIER NOG EEN COMMENT
         self.pruning_depth = pruning_depth if pruning_depth is not None else default_param[f'pruning_depth_{dimension}']
         self.pruning_distance_factor = pruning_distance_factor if pruning_distance_factor is not None else default_param[f'pruning_distance_{dimension}']
         self.max_queue_size = max_queue_size if max_queue_size is not None else default_param[f'max_queue_size_{dimension}']
@@ -35,13 +31,15 @@ class BFSPlusMerge():
         self.relevance_score = 0
         self.node_count = 0
 
+        ### HIER NOG EEN COMMENT
         self.first_node = self.create_first_node()
 
-        
 
+    ### DEZE FOLD FUNCTIE MODULAIR MAKEN; MEERDERE KLEINERE FUNCTIE
     def fold(self, fold_position = 0):
         """
-        Stores folded protein in attribute finished_folded_protein.
+        ### DIT KORTER MAKEN, ALLEEN FUNCTIONELE DINGEN OVER DE CODE BEHANDELEN, GEEN THEORETISCHE
+
         Folds protein using breadth first search:
             1. lists possibilities, create node for each (with parent and depth)
             2. add nodes to list of nodes
@@ -51,10 +49,11 @@ class BFSPlusMerge():
         Other prunings start at pruning depth.
             - Pruning distance factor is used to prune nodes at every depth of the tree: only nodes every depth * pruning_distance_factor are kept.
 
-        Max queue size allows only a certain a mount of nodes to be stored (and processed).
+        Max queue size allows only a certain amount of nodes to be stored (and processed).
             - If max queue size is too small: nodes on the right of the tree will never be used (can't be stored in the queue).
             - If maz queue size is too large: more nodes will have to be processed and total processing time will be increased.
-        Returns nothing.
+        
+        Stores folded protein in attribute finished_folded_protein.
         """
         protein_size = len(self.source_protein.aminos)
         
@@ -69,8 +68,10 @@ class BFSPlusMerge():
             
             node = non_visited_nodes.pop(0)
             
+            ### HIER NOG EEN COMMENT
             if node.depth < protein_size - 1:
 
+                ### HIER NOG EEN COMMENT
                 if node.score > self.relevance_score and node.depth > self.pruning_depth:
                     continue
 
@@ -78,10 +79,12 @@ class BFSPlusMerge():
                 protein = node.current_protein
                 current_amino = protein.aminos[node.depth]
                 
+                ### HIER NOG EEN COMMENT
                 if current_amino is not None:
                     if node.depth == 0:
                         self.init_amino_coordinates(current_amino)
-            
+
+                    ### HIER NOG EEN COMMENT
                     folds = self.get_possible_folds(protein, current_amino.coordinate) if node.depth > 0 else [1]
                     next_amino = self.source_protein.aminos[node.depth + 1]
                     
@@ -113,7 +116,8 @@ class BFSPlusMerge():
                             new_node.score = curr_score
                             self.node_count = self.node_count + 1
                             node.next_amino.append(new_node)
-                                
+
+                            ### HIER EEN LOSSE FUNCTIE VAN MAKEN    
                             # Depth and distance pruning
                             if (len(non_visited_nodes) < self.max_queue_size) and (len(non_visited_nodes) == 0 or self.node_count >= (non_visited_nodes[-1].id + (node.depth * self.pruning_distance_factor))):
                                 
@@ -129,6 +133,7 @@ class BFSPlusMerge():
 
                                     # Calculates new relevance score (this heuristic doesn't come from anywhere else and was invented by the student who wrote this code - it can probably be improved)
                                     if best_node.depth > 0 and node.depth >= self.pruning_depth:
+                                        ### HIER EEN LOSSE FUNCTIE VAN MAKEN
                                         self.relevance_score = best_node.score + 3 - self.dimension + self.source_protein.source_string[0:node.depth].count('C') + (self.source_protein.source_string[0:node.depth].count('P') * (self.dimension * 2) / protein_size)
 
                             # The node has been pruned, but did have a good score: we store it somewhere safe.        
@@ -137,12 +142,14 @@ class BFSPlusMerge():
                                 if len(good_but_pruned) < self.max_savestack_size:
                                     good_but_pruned.append(new_node)
 
+                                ### REMOVE THIS 
                                 # Remove oldest good but pruned node to add a new one.
                                 # elif len(good_but_pruned) == self.max_savestack_size:
                                 #     good_but_pruned.pop(0)
                                 #     good_but_pruned.append(new_node)
 
-            # Maximal depth has been reached, let's stop here.   
+            # Maximal depth has been reached, let's stop here. 
+            ### EXPLAIN WAT "STOP HERE" CONTAINS; e.g. 'update best score and protein'  
             elif node.depth == (protein_size - 1) and node.score == best_node.score:
                 best_node = node
                 protein = node.current_protein
@@ -176,7 +183,6 @@ class BFSPlusMerge():
     def get_possible_folds(self, protein, current_coordinates):  
         """
         Returns list of possible folds.
-        Arguments: protein, x, y.
         """  
         possible_folds = []
         
@@ -204,9 +210,7 @@ class BFSPlusMerge():
     def create_first_node(self):
         """
         Creates the origin ProteinTree node for BFSplus.
-
-        Arguments: none.
-        Returns: ProteinTree node.
+        Returns ProteinTree node.
         """
         first_protein = Protein(string=self.source_protein.aminos[0].type, dimensionality=self.dimension)
 
@@ -222,9 +226,6 @@ class BFSPlusMerge():
     def init_amino_coordinates(self, amino):
         """
         Initializes an amino to the 0 position, depending on the dimension in which the algorithm is started.
-
-        Arguments: amino.
-        Returns: nothing.
         """
         if (self.dimension == 3):
             amino.set_coordinate((0, 0, 0))
@@ -244,7 +245,7 @@ class BFSPlusMerge():
     def set_score(self, protein=None):
         """
         Calculates protein score and sets score attribute.
-        Argument: protein. (Default: attribute finished_folded_protein)
+        Takes attribute finished_folded_protein as default protein
         """
         
         if protein == None:

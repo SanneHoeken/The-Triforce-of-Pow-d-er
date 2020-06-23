@@ -1,6 +1,7 @@
 from code.visualisations import visualize
 from code.classes.amino import Amino
 from code.classes.protein import Protein
+from code.classes.protein_tree import ProteinTree
 from code.algorithms.help_methods.timer import Timer
 from code.algorithms.greedy import BestGreedy
 from code.algorithms.random import BestOfRandom
