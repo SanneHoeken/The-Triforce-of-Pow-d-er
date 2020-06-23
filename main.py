@@ -2,22 +2,31 @@ import csv
 from PIL import Image
 from code import visualize
 from code import Protein, Amino, Timer
-from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing
-from code import BFSPlusMerge, BBProteinFolder
+from code import BestGreedy, BestOfRandom, HillClimber, SimulatedAnnealing, BranchBound, BFSPlus
 
 if __name__ == "__main__":
 
     time = Timer()
 
     protein_input = input("Type the protein string you want to fold: ")
-    algorithm_input = int(input("""\nWhich algorithm do you want to use?
-    Type '1' for Random.
-    Type '2' for Greedy.
-    Type '3' for Hillclimber.
-    Type '4' for Simulated Annealing.
-    Type '5' for Breadth First Search ++++
-    Type '6' for Depth First Search with Branch and Bound\n"""))
+
+    if len(protein_input) < 36:
+        algorithm_input = int(input("""\nWhich algorithm do you want to use?
+        Type '1' for Random.
+        Type '2' for Greedy.
+        Type '3' for Hillclimber.
+        Type '4' for Simulated Annealing.
+        Type '5' for Breadth First Search ++++
+        Type '6' for Branch and Bound\n"""))
     
+    else:
+        algorithm_input = int(input("""\nWhich algorithm do you want to use?
+        Type '1' for Random.
+        Type '2' for Greedy.
+        Type '3' for Hillclimber.
+        Type '4' for Simulated Annealing.
+        Type '5' for Breadth First Search ++++\n"""))
+
     if algorithm_input in {1, 2, 3, 4, 5}:
         d_input = int(input("""\nIn which dimensionality do you want to fold your protein? 
         Type '2' for 2-dimensional
@@ -210,28 +219,29 @@ if __name__ == "__main__":
         time.start() 
 
         if param_input == 2:
-            BFSPlusMerge(protein, d_input, pruning_depth, pruning_distance, queue_size)
+            BFSPlus(protein, d_input, pruning_depth, pruning_distance, queue_size)
         else:
-            folder = BFSPlusMerge(protein, d_input)
+            folder = BFSPlus(protein, d_input)
 
         folder.fold()
         folder.set_score()
 
         time.stop() 
 
-    ##########################################
-    #DEPTH FIRST SEARCH WITH BRANCH AND BOUND#
-    ##########################################
+    ##################
+    #BRANCH AND BOUND#
+    ##################
 
     elif algorithm_input == 6:
-
-        print("\nRunning Depth First Search with Branch and Bound algorithm ...\n")
+        
+        prob1 = float(input("""\nWith with probability do you want the algorithm to discard a protein configuration if the score of that configuration is worse than the mean score? (Suggested: 0.8) \n"""))
+        prob2 = float(input("""\nWith with probability do you want the algorithm to discard a protein configuration if the score of that configuration is better than the mean score but worse than the best score? (Suggested: 0.5) \n"""))
+        print("\nRunning Branch and Bound algorithm ...\n")
 
         time.start() 
 
-        folder = BBProteinFolder(protein)
-        folder.fold()
-        folder.set_score()
+        folder = BranchBound(protein, p1=prob1, p2=prob2)
+        folder.run()
 
         time.stop() 
 
