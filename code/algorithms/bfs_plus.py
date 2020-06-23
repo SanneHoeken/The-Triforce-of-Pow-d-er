@@ -4,8 +4,6 @@ from datetime import datetime
 
 from code.classes.amino import Amino
 from code.classes.protein import Protein
-from code.algorithms.help_methods.calculate_score import calculate_score
-from code.algorithms.help_methods.calculate_coordinate import calculate_coordinate
 from code.classes.protein_tree import ProteinTree
 
 class BFSPlus():
@@ -84,14 +82,14 @@ class BFSPlus():
                     new_amino.previous_amino = 0 - fold
                                     
                     # Computes new coordinate for the newly created amino after fold
-                    new_x, new_y = calculate_coordinate(current_amino.fold, (x, y))
+                    new_x, new_y = protein.calculate_coordinate(current_amino.fold, (x, y))
                     new_amino.set_coordinate((new_x, new_y))
                     
                     # Copies current protein and add new amino at the end
                     new_protein = copy.deepcopy(protein)
                     new_protein.aminos.append(new_amino)
                     
-                    curr_score = calculate_score(new_protein)
+                    curr_score = new_protein.calculate_score()
                     
                     # Pruning: only adds 1 node per pruning_distance
                     if curr_score <= self.relevance_score:
@@ -175,5 +173,5 @@ class BFSPlus():
         if protein == None:
             protein = self.finished_folded_protein
 
-        score = calculate_score(protein)
+        score = protein.calculate_score()
         protein.set_score(score)
