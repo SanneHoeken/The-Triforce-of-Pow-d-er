@@ -29,7 +29,7 @@ class BestGreedy():
             # Update protein values en score if score is lower
             if score < self.best_score:
                 self.best_score = score
-                self.best_protein = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in greedy_folder.protein.get_aminos()]
+                self.best_protein = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in greedy_folder.protein.get_aminos()]
 
             # Reset protein
             for amino in self.protein.get_aminos()[1:]:
