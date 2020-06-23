@@ -21,7 +21,7 @@ class SimulatedAnnealing(HillClimber):
         for i in range(self.iterations):
 
             # Store values of current protein configuration
-            self.archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
+            self.archive = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in self.protein.get_aminos()]
             
             # Consecultively mutates protein specified times
             mutation_count = 0
@@ -29,7 +29,7 @@ class SimulatedAnnealing(HillClimber):
             while mutation_count < self.mutations_per_iteration:
                 
                 # Store values of current protein configuration
-                self.tmp_archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
+                self.tmp_archive = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in self.protein.get_aminos()]
                 
                 # Mutate protein
                 self.mutate()

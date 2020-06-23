@@ -26,7 +26,7 @@ class HillClimber():
         for i in range(self.iterations):
 
             # Store values of current protein configuration
-            self.archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
+            self.archive = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in self.protein.get_aminos()]
             
             # Consecultively mutates protein specified times
             mutation_count = 0
@@ -34,7 +34,7 @@ class HillClimber():
             while mutation_count < self.mutations_per_iteration:
 
                 # Store values of current protein configuration
-                self.tmp_archive = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in self.protein.get_aminos()]
+                self.tmp_archive = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in self.protein.get_aminos()]
                 
                 # Mutate protein
                 self.mutate()
@@ -74,7 +74,7 @@ class HillClimber():
                 amino.set_fold(fold)
 
                 # Update coordinate
-                co = amino.coordinate
+                co = amino.get_coordinate()
 
             # Change coordinates and previous amino for amino after selected amino
             elif amino.id == pos + 1:
@@ -107,14 +107,14 @@ class HillClimber():
         new_fold = self.protein.get_aminos()[position].fold
 
         # Retrieve new fold if protein is 2D
-        if len(self.protein.get_aminos()[0].coordinate) == 2: 
+        if len(self.protein.get_aminos()[0].get_coordinate()) == 2: 
             
             # Choose new fold randomly until amino's fold is changed
             while self.protein.get_aminos()[position].fold == new_fold:
                 new_fold = random.choice([-2, 2, -1, 1])
 
         # Retrieve new fold if protein is 3D
-        elif len(self.protein.get_aminos()[0].coordinate) == 3: 
+        elif len(self.protein.get_aminos()[0].get_coordinate()) == 3: 
             
             # Choose new fold randomly until amino's fold is changed
             while self.protein.get_aminos()[position].fold == new_fold:
@@ -128,7 +128,7 @@ class HillClimber():
         Checks whether protein configuration is valid
         """
         # Returns True if no double coordinates in protein
-        coordinates = [amino.coordinate for amino in self.protein.get_aminos()]
+        coordinates = [amino.get_coordinate() for amino in self.protein.get_aminos()]
         
         return len(set(coordinates)) == len(coordinates)
 

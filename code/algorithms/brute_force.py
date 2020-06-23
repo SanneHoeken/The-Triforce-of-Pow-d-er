@@ -67,8 +67,8 @@ class BruteForce():
         Method that takes protein and list of folds and returns score of folded protein
         """
         # set initial coordinate and previous amino
-        coordinate = self.protein.get_aminos()[0].coordinate
-        previous_amino = self.protein.get_aminos()[0].previous_amino
+        coordinate = self.protein.get_aminos()[0].get_coordinate()
+        previous_amino = self.protein.get_aminos()[0].get_previous_amino()
 
         # iterate over every amino in protein
         for amino in self.protein.get_aminos():
@@ -108,6 +108,6 @@ class BruteForce():
         Checks whether protein configuration is valid
         """
         # returns True if no double coordinates in protein
-        coordinates = [amino.coordinate for amino in self.protein.get_aminos() if amino.coordinate is not None]
+        coordinates = [amino.get_coordinate() for amino in self.protein.get_aminos() if amino.get_coordinate() is not None]
         
         return len(set(coordinates)) == len(coordinates)

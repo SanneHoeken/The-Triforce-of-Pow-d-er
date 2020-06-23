@@ -28,7 +28,7 @@ class BestOfRandom():
             # Update protein values en score if score is lower
             if score < self.best_score:
                 self.best_score = score
-                self.best_protein = [(amino.fold, amino.coordinate, amino.previous_amino) for amino in random_folder.protein.get_aminos()]
+                self.best_protein = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in random_folder.protein.get_aminos()]
 
             # Reset protein
             for amino in self.protein.get_aminos()[1:]:
@@ -88,7 +88,7 @@ class RandomFolder():
         """
         # Store current amino and its coordinate
         current_amino = self.protein.get_aminos()[self.folding]
-        self.coordinates.add(current_amino.coordinate)
+        self.coordinates.add(current_amino.get_coordinate())
 
         # Retrieve values for current amino and its neighbor
         new_values = self.get_values(current_amino)
@@ -128,15 +128,15 @@ class RandomFolder():
         possible_values = []
 
         # Retrieve values for 2D-amino
-        if len(amino.coordinate) == 2:
-            x, y = amino.coordinate
+        if len(amino.get_coordinate()) == 2:
+            x, y = amino.get_coordinate()
         
             # Dict with all possible fold - next-coordinate combinations 
             values = {1: (x+1, y), -1: (x-1, y), 2:(x, y+1), -2: (x, y-1)} 
 
         # Retrieve values for 3D amino
-        if len(amino.coordinate) == 3:
-            x, y, z = amino.coordinate
+        if len(amino.get_coordinate()) == 3:
+            x, y, z = amino.get_coordinate()
 
             # Dict with all possible fold - next-coordinate combinations 
             values = {1: (x+1, y, z), -1: (x-1, y, z), 2:(x, y+1, z), -2: (x, y-1, z), 3: (x, y, z+1), -3: (x, y, z-1)} 

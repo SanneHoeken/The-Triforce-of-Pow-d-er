@@ -8,6 +8,7 @@ class Amino():
         self.coordinate = None
         self.previous_amino = None
 
+
     def set_fold(self, fold):
         """
         Meaning of the fold:
@@ -20,6 +21,11 @@ class Amino():
         """
         self.fold = fold
 
+
+    def get_fold(self):
+        return self.fold
+
+
     def set_previous_amino(self, previous_amino):
         """
         = negative of fold of previous amino
@@ -27,9 +33,19 @@ class Amino():
         """
         self.previous_amino = previous_amino
 
+
+    def get_previous_amino(self):
+        return self.previous_amino
+
+
     def set_coordinate(self, coordinate):
         self.coordinate = coordinate
-    
+
+
+    def get_coordinate(self):
+        return self.coordinate
+
+
     def reset_amino(self):
         """
         Sets the fold, coordinate and previous amino values to None
