@@ -65,9 +65,14 @@ De hierop volgende lijst beschrijft de belangrijkste mappen en files in het proj
     * Pruning op breedte: de gebruiker kan een afstandsfactor geven om meer nodes in de breedte te prunen (om te voorkomen dat er te veel nodes zijn met een vergelijkbare structuur en dezelfde score). Per diepte wordt er slechts één node bewaard iedere diepte * afstandsfactor node. 
   Met gebruik en goed balanceren van deze parameters kan het algoritme snel de relevante vouwingen selecteren en een eiwit met een hoge score opbouwen. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/bfs_plus.py) code voor implementatiedetails.
 6. **Depth First Search met Branch & Bound.**
-  Het Depth First Branch & Bound algoritme bouwt constructief en recursief het eiwit op. Dit doet het door een stack met mogelijke vouwingen af te lopen. Als de stack leeg is, wordt de vouwing met de minimale score als output gegeven. 
-  
-  Hier informatie over het algoritme. Bekijk [hier](link naar de code) de code voor implementatiedetails.
+  Het Depth First Branch & Bound Search algoritme bouwt constructief het eiwit op. Dit doet het door een list met mogelijke vouwingen af te lopen. Wanneer de stack leeg is, wordt het eiwit met de minimale score als output gegeven. Iedere keer dat een aminozuur aan het eiwit toegevoegd wordt, kijkt het algoritme naar mogelijke vouwingen/plaatsingen voor volgende aminozuren.
+  De scores van mogelijke vouwingen worden berekend per aminozuur. Het algoritme pruned aan de hand van eerder gevonden scores per aminozuur.
+    * Wanneer een vouwing een positievere score heeft dan het gemiddelde, is het minder   aannemelijk dat het tot een optimale vouwing leidt en is er een statistische p1 kans dat het wordt toegevoegd aan de list.
+    * Wanneer de vouwing gelijk is aan- of negatiever is dan het gemiddelde maar positiever dan de beste score, is het veelbelovend en is er een p2 kans dat het wordt toegevoegd.
+    * Wanneer de vouwing negatiever is dan de voorgaande beste vouwing, is het waarschijnlijk, dat het een meer wenselijke eindscore zal behalen en wordt het altijd toegevoegd aan de lijst.
+    * Een vouwing die geen invloed heeft op de score, dus in het geval van een polair aminozuur, wordt altijd aan de lijst toegevoegd. Het kan later aminozuren op wenselijke posities plaatsen. 
+  Wanneer p2 meer kans heeft om toegevoegd te worden aan de lijst dan p1, bouwt het algoritme een bias op naar meer optimale oplossingen. Het omzeilt de bias naar winst op korte termijn, die men in greedy algoritmes vindt, door een kans te geven aan slechter scorende vouwingen om uitgeprobeerd te worden. 
+  Dit Branch & Bound algoritme is vooral geschikt voor eiwitten met niet meer dan 36 aminozuren. Grotere eiwitten kunnen het werkgeheugen te zwaar belasten. Bekijk [hier](https://github.com/SanneHoeken/The-Triforce-of-Pow-d-er/blob/master/code/algorithms/branch_and_bound_recursion.py) de code voor implementatiedetails.
 
 ## Auteurs
 - Thomas van Genderen
