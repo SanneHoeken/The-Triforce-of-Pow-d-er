@@ -15,7 +15,7 @@ class BranchBound(Greedy):
     The potential of a configuration is determined by two variables: the average score of a configuration of 
     a certain length and the best score for a configuration of a certain length. The score of a configuration 
     is compared with these two variables. If the score is better than the best score, the partial configuration 
-    is not primed. A score worse than the average score is primed with a given probability p1. A score better 
+    is not pruned. A score worse than the average score is pruned with a given probability p1. A score better 
     than the average value but worse than the best score is pruned with a probability p2.
     """
     def __init__(self, protein, p1=0.8, p2=0.5):
@@ -69,9 +69,6 @@ class BranchBound(Greedy):
                     self.best_protein = [(amino.get_fold(), amino.get_coordinate(), amino.get_previous_amino()) for amino in self.protein.get_aminos()]
                 continue
             
-            # Reset values of last amino folding
-            self.reset_values(id)
-            
             # Add score to all scores in current depth
             if id not in self.all_scores:
                 self.all_scores[id] = []
@@ -88,29 +85,30 @@ class BranchBound(Greedy):
             # Check for pruning if amino is H or C
             if amino.type == 'H' or amino.type == 'C':
                 
-                # Continue searching if score is as good as/better than best score
                 bestscore = self.best_scores[id]
+                meanscore = sum(self.all_scores[id]) / len(self.all_scores[id])
+
+                # Continue searching if score is as good as/better than best score
                 if score <= bestscore:
                     self.best_scores[id] = score
-                    self.set_values(values, id)
                     self.search(id + 1)
                 
                 # Continue with probility 1 - p1 if score is higher than meanscore
-                meanscore = sum(self.all_scores[id]) / len(self.all_scores[id])
-                if score > meanscore: 
+                elif score > meanscore: 
                     if random.random() > self.p1: 
-                        self.set_values(values, id)
                         self.search(id + 1)
 
                 # Continue with probability 1 - p2 if score is higher than best score but lower than meanscore
-                if score > bestscore and score <= meanscore: 
+                elif score > bestscore and score <= meanscore: 
                     if random.random() > self.p2:
-                        self.set_values(values, id)
                         self.search(id + 1)
+
+                else:
+                    # Reset values of last amino folding
+                    self.reset_values(id)
             
             # Continue searching if amino is P
             else:
-                self.set_values(values, id)
                 self.search(id + 1)
 
 
